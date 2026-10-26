@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book & order — Cravn’ Go</title>
+  <meta name="description" content="Reserve a table, order ahead for pick-up, or get Cravn’ Go delivered.">
+  <meta name="theme-color" content="#1c1512">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cravn’ Go">
+  <meta property="og:title" content="Book & order — Cravn’ Go">
+  <meta property="og:description" content="Reserve a table, order ahead for pick-up, or get Cravn’ Go delivered.">
+  <meta property="og:image" content="images/hero.jpg">
+
+  <script>document.documentElement.classList.add("js")</script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400..800&family=Marcellus&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ Header (same on every page) ============ -->
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Cravn’ Go home">
+        <span class="brand-name">Cravn’ Go</span>
+        <span class="brand-flag" aria-hidden="true"></span>
+        <span class="brand-sub">Italian Restaurant</span>
+      </a>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="book.html" aria-current="page">Book</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a class="account-toggle" href="register.html" aria-label="Create an account">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+          <span class="account-toggle-label">Create account</span>
+        </a>
+        <button class="order-toggle" type="button" data-open-order aria-label="Your order, 0 items">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="order-toggle-label">Your order</span>
+          <span class="order-count" data-order-count hidden>0</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" data-nav-toggle>
+          <span class="sr-only">Menu</span>
+          <span class="nav-toggle-bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ Page banner ============ -->
+    <section class="page-hero">
+      <img class="page-hero-img" src="images/quality.jpg" width="1295" height="1214" alt="" fetchpriority="high" style="object-position: 50% 30%">
+      <div class="container">
+        <p class="eyebrow eyebrow-light">Book &amp; order</p>
+        <h1>Reserve a table or order ahead</h1>
+        <p>Dine in, pick up or get it delivered. Choose a time and we’ll have everything ready.</p>
+      </div>
+    </section>
+
+    <!-- ============ Booking form ============ -->
+    <section class="section book">
+      <div class="container">
+        <form class="book-card reveal" data-booking-form>
+          <fieldset class="book-types">
+            <legend class="sr-only">How would you like to enjoy Cravn’ Go?</legend>
+            <label class="book-type">
+              <input type="radio" name="type" value="reserve" checked>
+              <span class="book-type-body">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h18M6 10v10M18 10v10M8 6h8"/></svg>
+                <strong>Reserve a table</strong>
+                <small>Dine in with us</small>
+              </span>
+            </label>
+            <label class="book-type">
+              <input type="radio" name="type" value="pickup">
+              <span class="book-type-body">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+                <strong>Pick up</strong>
+                <small>Order ahead, collect in store</small>
+              </span>
+            </label>
+            <label class="book-type">
+              <input type="radio" name="type" value="delivery">
+              <span class="book-type-body">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l3 3v3h-7"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/></svg>
+                <strong>Delivery</strong>
+                <small>We bring it to your door</small>
+              </span>
+            </label>
+          </fieldset>
+
+          <div class="book-layout">
+            <div class="book-fields">
+              <fieldset class="book-group">
+                <legend>Your account</legend>
+                <label class="field">
+                  <span>Username or email</span>
+                  <input name="account" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="254" required>
+                  <small class="field-hint">The one you used to create your account — we’ll use its name and mobile number for this booking. No account yet? <a href="register.html">Create one</a>.</small>
+                </label>
+              </fieldset>
+
+              <fieldset class="book-group">
+                <legend data-when-legend>Date &amp; time</legend>
+                <div class="field-row">
+                  <label class="field">
+                    <span>Date</span>
+                    <input name="date" type="date" required data-book-date>
+                  </label>
+                  <label class="field">
+                    <span data-time-label>Time</span>
+                    <select name="time" required data-book-time></select>
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="book-group" data-for="reserve">
+                <legend>Your table</legend>
+                <div class="field-row">
+                  <label class="field">
+                    <span>Guests</span>
+                    <select name="guests" required></select>
+                  </label>
+                  <label class="field">
+                    <span>Occasion <em>(optional)</em></span>
+                    <select name="occasion">
+                      <option value="">Just a meal</option>
+                      <option>Birthday</option>
+                      <option>Anniversary</option>
+                      <option>Date night</option>
+                      <option>Business</option>
+                      <option>Other</option>
+                    </select>
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="book-group" data-for="delivery" hidden disabled>
+                <legend>Delivery address</legend>
+                <label class="field">
+                  <span>House no. &amp; street</span>
+                  <input name="address" type="text" autocomplete="address-line1" maxlength="160" required>
+                </label>
+                <div class="field-row">
+                  <label class="field">
+                    <span>Barangay</span>
+                    <input name="barangay" type="text" autocomplete="address-level3" maxlength="80" required>
+                  </label>
+                  <label class="field">
+                    <span>City / municipality</span>
+                    <input name="city" type="text" autocomplete="address-level2" maxlength="80" value="Sto. Tomas" required>
+                  </label>
+                </div>
+                <label class="field">
+                  <span>Landmark <em>(optional)</em></span>
+                  <input name="landmark" type="text" maxlength="160" placeholder="e.g. beside the blue gate">
+                </label>
+              </fieldset>
+
+              <label class="field">
+                <span>Notes <em>(optional)</em></span>
+                <textarea name="notes" rows="3" maxlength="500" placeholder="Allergies, special requests…"></textarea>
+              </label>
+            </div>
+
+            <aside class="book-summary">
+              <h3 data-summary-title>Pre-order food</h3>
+              <p class="small muted" data-summary-hint>Optional — we’ll have your dishes ready when you arrive.</p>
+              <ul class="summary-lines" data-summary-lines></ul>
+              <p class="summary-empty" data-summary-empty>No dishes yet. <a href="menu.html">Browse the menu</a> and tap <strong>Add</strong>.</p>
+              <div class="order-total summary-total"><span>Total</span><strong data-summary-total>₱0</strong></div>
+              <button class="btn btn-primary btn-block" type="submit" data-book-submit>Reserve table</button>
+              <p class="form-error" role="alert" data-book-error></p>
+            </aside>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer (same on every page) ============ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a class="brand brand-light" href="index.html" aria-label="Cravn’ Go home">
+        <span class="brand-name">Cravn’ Go</span>
+        <span class="brand-flag" aria-hidden="true"></span>
+        <span class="brand-sub">Italian Restaurant</span>
+        </a>
+        <p>A taste of Italy, a touch of love.</p>
+      </div>
+      <address class="footer-contact">
+        The Lifestyle Strip, Sto. Tomas, Batangas<br>
+        <a href="tel:+639305591153">0930 559 1153</a><br>
+        <a href="mailto:latjhoseah09@gmail.com">latjhoseah09@gmail.com</a>
+      </address>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="menu.html">Menu</a>
+        <a href="book.html">Book</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="contact.html">Contact</a>
+        <a href="register.html">Create account</a>
+        <a href="https://www.facebook.com/profile.php?id=61595608813635" target="_blank" rel="noopener">Facebook</a>
+      </nav>
+    </div>
+    <div class="container footer-base">
+      <p>© <span data-year>2026</span> Cravn’ Go. All rights reserved.</p>
+      <p class="script">Buon appetito!</p>
+    </div>
+  </footer>
+
+  <!-- ============ Order drawer (same on every page) ============ -->
+  <dialog class="drawer" id="order" aria-labelledby="order-title" data-drawer>
+    <div class="drawer-inner">
+      <header class="drawer-head">
+        <h2 id="order-title">Your order</h2>
+        <button class="icon-btn" type="button" data-close aria-label="Close order">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="drawer-empty" data-order-empty>
+        <p>Your order is empty.</p>
+        <p class="muted">Pick something delicious from the menu to get started.</p>
+        <a class="btn btn-primary" href="menu.html">Browse the menu</a>
+      </div>
+
+      <ul class="order-lines" data-order-lines></ul>
+
+      <footer class="drawer-foot" data-order-foot hidden>
+        <div class="order-total"><span>Total</span><strong data-order-total>₱0</strong></div>
+        <button class="btn btn-primary btn-block" type="button" data-checkout>Checkout</button>
+        <p class="muted small">Next, choose pick-up, delivery or a table reservation. Prefer to call? <a href="tel:+639305591153">0930 559 1153</a></p>
+        <div class="drawer-links">
+          <button class="link-btn" type="button" data-send-order>Send via Messenger instead</button>
+          <button class="link-btn" type="button" data-clear-order>Clear order</button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- ============ Booking confirmation ============ -->
+  <dialog class="modal" aria-labelledby="confirm-title" data-confirm-dialog>
+    <div class="modal-inner modal-center">
+      <span class="confirm-check" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+      </span>
+      <h2 id="confirm-title">Booking received!</h2>
+      <p data-confirm-text></p>
+      <p class="confirm-ref">Your reference <strong data-confirm-ref></strong></p>
+      <p class="small muted">We’ll confirm it with you shortly. Keep this reference in case you need to contact us.</p>
+      <div class="modal-actions">
+        <a class="btn btn-outline" href="menu.html">Back to the menu</a>
+        <button class="btn btn-primary" type="button" data-close>Done</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/book.js" defer></script>
+</body>
+</html>

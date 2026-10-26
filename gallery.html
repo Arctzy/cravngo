@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gallery — Cravn’ Go</title>
+  <meta name="description" content="Photos of Cravn’ Go — the warm dining room, the busy kitchen and the dishes our guests love.">
+  <meta name="theme-color" content="#1c1512">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cravn’ Go">
+  <meta property="og:title" content="Gallery — Cravn’ Go">
+  <meta property="og:description" content="Photos of Cravn’ Go — the warm dining room, the busy kitchen and the dishes our guests love.">
+  <meta property="og:image" content="images/hero.jpg">
+
+  <script>document.documentElement.classList.add("js")</script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400..800&family=Marcellus&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ Header (same on every page) ============ -->
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Cravn’ Go home">
+        <span class="brand-name">Cravn’ Go</span>
+        <span class="brand-flag" aria-hidden="true"></span>
+        <span class="brand-sub">Italian Restaurant</span>
+      </a>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="book.html">Book</a></li>
+          <li><a href="gallery.html" aria-current="page">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a class="account-toggle" href="register.html" aria-label="Create an account">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+          <span class="account-toggle-label">Create account</span>
+        </a>
+        <button class="order-toggle" type="button" data-open-order aria-label="Your order, 0 items">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="order-toggle-label">Your order</span>
+          <span class="order-count" data-order-count hidden>0</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" data-nav-toggle>
+          <span class="sr-only">Menu</span>
+          <span class="nav-toggle-bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ Page banner ============ -->
+    <section class="page-hero">
+      <img class="page-hero-img" src="images/hero.jpg" width="1600" height="900" alt="" fetchpriority="high" style="object-position: 50% 50%">
+      <div class="container">
+        <p class="eyebrow eyebrow-light">Gallery</p>
+        <h1>Explore our culinary visuals</h1>
+        <p>The warm room, the busy kitchen and the plates our guests keep coming back for.</p>
+      </div>
+    </section>
+
+    <!-- ============ Photos ============ -->
+    <section class="section gallery">
+      <div class="container">
+        <div class="bento">
+          <button class="tile tile-a reveal" type="button" data-lightbox>
+            <img src="images/menu-hero.jpg" width="1254" height="1254" loading="lazy" alt="A guest browsing the Cravn’ Go menu at a candlelit table">
+          </button>
+          <button class="tile tile-b reveal" type="button" data-lightbox>
+            <img src="images/recipes.jpg" width="1536" height="1024" loading="lazy" style="object-position: 50% 62%" alt="Our chef plating chicken piccata in the kitchen">
+          </button>
+          <button class="tile tile-c reveal" type="button" data-lightbox>
+            <img src="images/limonata.jpg" width="736" height="736" loading="lazy" alt="Iced limonata with lemon and mint">
+          </button>
+          <button class="tile tile-d reveal" type="button" data-lightbox>
+            <img src="images/tiramisu.jpg" width="736" height="981" loading="lazy" alt="Tiramisu with chocolate curls">
+          </button>
+          <button class="tile tile-e reveal" type="button" data-lightbox>
+            <img src="images/service.jpg" width="1536" height="1024" loading="lazy" style="object-position: 50% 40%" alt="Friends sharing a meal at Cravn’ Go">
+          </button>
+          <button class="tile tile-f reveal" type="button" data-lightbox>
+            <img src="images/quality.jpg" width="1295" height="1214" loading="lazy" style="object-position: 50% 30%" alt="A server bringing carbonara to the table">
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer (same on every page) ============ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a class="brand brand-light" href="index.html" aria-label="Cravn’ Go home">
+        <span class="brand-name">Cravn’ Go</span>
+        <span class="brand-flag" aria-hidden="true"></span>
+        <span class="brand-sub">Italian Restaurant</span>
+        </a>
+        <p>A taste of Italy, a touch of love.</p>
+      </div>
+      <address class="footer-contact">
+        The Lifestyle Strip, Sto. Tomas, Batangas<br>
+        <a href="tel:+639305591153">0930 559 1153</a><br>
+        <a href="mailto:latjhoseah09@gmail.com">latjhoseah09@gmail.com</a>
+      </address>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="menu.html">Menu</a>
+        <a href="book.html">Book</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="contact.html">Contact</a>
+        <a href="register.html">Create account</a>
+        <a href="https://www.facebook.com/profile.php?id=61595608813635" target="_blank" rel="noopener">Facebook</a>
+      </nav>
+    </div>
+    <div class="container footer-base">
+      <p>© <span data-year>2026</span> Cravn’ Go. All rights reserved.</p>
+      <p class="script">Buon appetito!</p>
+    </div>
+  </footer>
+
+  <!-- ============ Order drawer (same on every page) ============ -->
+  <dialog class="drawer" id="order" aria-labelledby="order-title" data-drawer>
+    <div class="drawer-inner">
+      <header class="drawer-head">
+        <h2 id="order-title">Your order</h2>
+        <button class="icon-btn" type="button" data-close aria-label="Close order">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="drawer-empty" data-order-empty>
+        <p>Your order is empty.</p>
+        <p class="muted">Pick something delicious from the menu to get started.</p>
+        <a class="btn btn-primary" href="menu.html">Browse the menu</a>
+      </div>
+
+      <ul class="order-lines" data-order-lines></ul>
+
+      <footer class="drawer-foot" data-order-foot hidden>
+        <div class="order-total"><span>Total</span><strong data-order-total>₱0</strong></div>
+        <button class="btn btn-primary btn-block" type="button" data-checkout>Checkout</button>
+        <p class="muted small">Next, choose pick-up, delivery or a table reservation. Prefer to call? <a href="tel:+639305591153">0930 559 1153</a></p>
+        <div class="drawer-links">
+          <button class="link-btn" type="button" data-send-order>Send via Messenger instead</button>
+          <button class="link-btn" type="button" data-clear-order>Clear order</button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- ============ Photo viewer ============ -->
+  <dialog class="lightbox" aria-label="Photo viewer" data-lightbox-dialog>
+    <figure>
+      <img alt="" data-lightbox-img>
+      <figcaption data-lightbox-cap></figcaption>
+    </figure>
+    <button class="icon-btn lb-close" type="button" data-close aria-label="Close photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <button class="icon-btn lb-prev" type="button" data-lb-prev aria-label="Previous photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+    </button>
+    <button class="icon-btn lb-next" type="button" data-lb-next aria-label="Next photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+    </button>
+  </dialog>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/gallery.js" defer></script>
+</body>
+</html>

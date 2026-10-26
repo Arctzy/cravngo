@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About us — Cravn’ Go</title>
+  <meta name="description" content="The story and mission behind Cravn’ Go, an Italian restaurant in Sto. Tomas, Batangas.">
+  <meta name="theme-color" content="#1c1512">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cravn’ Go">
+  <meta property="og:title" content="About us — Cravn’ Go">
+  <meta property="og:description" content="The story and mission behind Cravn’ Go, an Italian restaurant in Sto. Tomas, Batangas.">
+  <meta property="og:image" content="images/hero.jpg">
+
+  <script>document.documentElement.classList.add("js")</script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400..800&family=Marcellus&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ Header (same on every page) ============ -->
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Cravn’ Go home">
+        <span class="brand-name">Cravn’ Go</span>
+        <span class="brand-flag" aria-hidden="true"></span>
+        <span class="brand-sub">Italian Restaurant</span>
+      </a>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html" aria-current="page">About</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="book.html">Book</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a class="account-toggle" href="register.html" aria-label="Create an account">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+          <span class="account-toggle-label">Create account</span>
+        </a>
+        <button class="order-toggle" type="button" data-open-order aria-label="Your order, 0 items">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="order-toggle-label">Your order</span>
+          <span class="order-count" data-order-count hidden>0</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" data-nav-toggle>
+          <span class="sr-only">Menu</span>
+          <span class="nav-toggle-bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ Page banner ============ -->
+    <section class="page-hero">
+      <img class="page-hero-img" src="images/recipes.jpg" width="1536" height="1024" alt="" fetchpriority="high" style="object-position: 50% 35%">
+      <div class="container">
+        <p class="eyebrow eyebrow-light">About us</p>
+        <h1>A taste of Italy, a touch of love.</h1>
+        <p>Meet the kitchen, the people and the mission behind every plate at Cravn’ Go.</p>
+      </div>
+    </section>
+
+    <!-- ============ Mission ============ -->
+    <section class="section about">
+      <div class="container about-grid">
+        <figure class="about-media reveal">
+          <img src="images/service.jpg" width="1536" height="1024" loading="lazy"
+               alt="Four friends laughing over pasta, pizza and drinks under the Cravn’ Go sign">
+          <figcaption class="about-quote">
+            <span class="flag-rule" aria-hidden="true"></span>
+            <q>Good food, great vibes, always.</q>
+          </figcaption>
+        </figure>
+
+        <div class="about-copy reveal">
+          <p class="eyebrow">Our story</p>
+          <h2>Our culinary mission</h2>
+          <p class="lead">We bring people together through the authentic flavors of Italy — serving delicious, high-quality dishes made with fresh ingredients and passion.</p>
+          <p>We strive for warm hospitality, excellent service and a welcoming atmosphere where every guest can enjoy a memorable Italian meal. At Cravn’ Go, that means cooking from scratch, caring about every plate, and keeping sustainability and customer satisfaction at the heart of what we do.</p>
+          <a class="btn btn-primary" href="menu.html">Explore the menu</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Why choose us ============ -->
+    <section class="section why">
+      <div class="container">
+        <div class="section-head section-head-split reveal">
+          <div>
+            <p class="eyebrow eyebrow-light">Why choose us</p>
+            <h2>Exceptional food and service, making every meal special.</h2>
+          </div>
+        </div>
+
+        <ul class="why-list">
+          <li class="reveal">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26C6 14 14 6 26 6c0 12-8 20-20 20Z"/><path d="M6 26 18 14"/></svg>
+            <h3>Freshness</h3>
+            <p>We prioritize freshness in everything we serve for the best flavor and quality.</p>
+          </li>
+          <li class="reveal">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2"/><rect x="18" y="5" width="9" height="9" rx="2"/><rect x="5" y="18" width="9" height="9" rx="2"/><rect x="18" y="18" width="9" height="9" rx="2"/></svg>
+            <h3>Variety</h3>
+            <p>A menu for every taste, dietary preference and occasion.</p>
+          </li>
+          <li class="reveal">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M11 26V6h6.5a5.5 5.5 0 0 1 0 11H11"/><path d="M7 10h18M7 14h18"/></svg>
+            <h3>Affordable</h3>
+            <p>Delicious, quality meals at prices that give real value to every guest.</p>
+          </li>
+          <li class="reveal">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3v6"/><path d="M8 18a8 8 0 0 1 16 0H8Z"/><path d="M13 22a3 3 0 0 0 6 0"/></svg>
+            <h3>Ambience</h3>
+            <p>Relax in a clean, modern room that makes every meal feel like an occasion.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ Call to action ============ -->
+    <section class="cta">
+      <img class="cta-img" src="images/mission.jpg" width="736" height="981" loading="lazy" alt="">
+      <div class="container cta-inner reveal">
+        <h2>Come hungry, leave happy.</h2>
+        <p>Save a table for your next get-together, or come find us at The Lifestyle Strip.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="book.html?type=reserve">Book a table</a>
+          <a class="btn btn-ghost" href="contact.html">Find us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer (same on every page) ============ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a class="brand brand-light" href="index.html" aria-label="Cravn’ Go home">
+        <span class="brand-name">Cravn’ Go</span>
+        <span class="brand-flag" aria-hidden="true"></span>
+        <span class="brand-sub">Italian Restaurant</span>
+        </a>
+        <p>A taste of Italy, a touch of love.</p>
+      </div>
+      <address class="footer-contact">
+        The Lifestyle Strip, Sto. Tomas, Batangas<br>
+        <a href="tel:+639305591153">0930 559 1153</a><br>
+        <a href="mailto:latjhoseah09@gmail.com">latjhoseah09@gmail.com</a>
+      </address>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="menu.html">Menu</a>
+        <a href="book.html">Book</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="contact.html">Contact</a>
+        <a href="register.html">Create account</a>
+        <a href="https://www.facebook.com/profile.php?id=61595608813635" target="_blank" rel="noopener">Facebook</a>
+      </nav>
+    </div>
+    <div class="container footer-base">
+      <p>© <span data-year>2026</span> Cravn’ Go. All rights reserved.</p>
+      <p class="script">Buon appetito!</p>
+    </div>
+  </footer>
+
+  <!-- ============ Order drawer (same on every page) ============ -->
+  <dialog class="drawer" id="order" aria-labelledby="order-title" data-drawer>
+    <div class="drawer-inner">
+      <header class="drawer-head">
+        <h2 id="order-title">Your order</h2>
+        <button class="icon-btn" type="button" data-close aria-label="Close order">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="drawer-empty" data-order-empty>
+        <p>Your order is empty.</p>
+        <p class="muted">Pick something delicious from the menu to get started.</p>
+        <a class="btn btn-primary" href="menu.html">Browse the menu</a>
+      </div>
+
+      <ul class="order-lines" data-order-lines></ul>
+
+      <footer class="drawer-foot" data-order-foot hidden>
+        <div class="order-total"><span>Total</span><strong data-order-total>₱0</strong></div>
+        <button class="btn btn-primary btn-block" type="button" data-checkout>Checkout</button>
+        <p class="muted small">Next, choose pick-up, delivery or a table reservation. Prefer to call? <a href="tel:+639305591153">0930 559 1153</a></p>
+        <div class="drawer-links">
+          <button class="link-btn" type="button" data-send-order>Send via Messenger instead</button>
+          <button class="link-btn" type="button" data-clear-order>Clear order</button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

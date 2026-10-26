@@ -16,7 +16,8 @@
   const firstName = (name) => String(name).trim().split(/\s+/)[0];
   const initials = (name) =>
     String(name).trim().split(/\s+/).slice(0, 2).map((word) => word[0]).join("").toUpperCase();
-  const isPhMobile = (value) => /^(?:\+?63|0)?9\d{9}$/.test(String(value).replace(/[\s-]/g, ""));
+  // PH mobile number: exactly 11 digits, starting with 09 (e.g. 09171234567)
+  const isPhMobile = (value) => /^09\d{9}$/.test(String(value).trim());
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const page = location.pathname.split("/").pop() || "index.html";
 
@@ -221,6 +222,25 @@
       else if (JSON.stringify(data) !== JSON.stringify(session.user)) setSession({ token: session.token, user: data });
     });
   }
+
+  /* ---------- Mobile number fields: exactly 11 digits (09XXXXXXXXX) ---------- */
+  // Letters, spaces and a 12th digit are ignored; a pasted "+63 917 123 4567" becomes "09171234567"
+  const toPhMobile = (value) => {
+    let digits = String(value).replace(/\D/g, "");
+    if (digits.startsWith("63")) digits = "0" + digits.slice(2);
+    else if (digits.startsWith("9")) digits = "0" + digits;
+    return digits.slice(0, 11);
+  };
+  $$("[data-phone]").forEach((input) => {
+    const check = () =>
+      input.setCustomValidity(!input.value || isPhMobile(input.value) ? "" : "Enter your 11-digit mobile number, e.g. 09171234567.");
+    input.addEventListener("input", () => {
+      const clean = toPhMobile(input.value);
+      if (clean !== input.value) input.value = clean;
+      check();
+    });
+    check();
+  });
 
   /* ---------- Show / hide password ---------- */
   $$("[data-toggle-password]").forEach((btn) => {

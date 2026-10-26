@@ -109,7 +109,10 @@
             </label>
             <label class="field">
               <span>Mobile number</span>
-              <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0917 123 4567" required>
+              <input name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" data-phone
+                     minlength="11" pattern="09[0-9]{9}" placeholder="09171234567" required
+                     title="11-digit mobile number starting with 09">
+              <small class="field-hint">11 digits, starting with 09.</small>
             </label>
             <label class="field">
               <span>Password</span>

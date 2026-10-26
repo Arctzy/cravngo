@@ -69,7 +69,7 @@
     errorEl.textContent = "";
     const data = Object.fromEntries(new FormData(form));
     if (!isPhMobile(data.phone)) {
-      errorEl.textContent = "Please enter a valid mobile number, e.g. 0917 123 4567.";
+      errorEl.textContent = "Please enter your 11-digit mobile number, e.g. 09171234567.";
       form.elements.phone.focus();
       return;
     }

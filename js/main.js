@@ -1,35 +1,52 @@
 /*
- * Cravn' Go — shared code for every page: header, scroll effects, the order
- * drawer, the newsletter form and small helpers.
- * Page scripts (menu.js, book.js, register.js, …) use the helpers through window.CG.
+ * Cravn' Go — shared code for every page: header (with the logged-in account menu),
+ * scroll effects, the order drawer, the newsletter form and small helpers.
+ * Page scripts (menu.js, book.js, login.js, …) use the helpers through window.CG.
  */
 (() => {
   const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61595608813635";
-  const STORAGE_KEY = "cravngo-order";
+  const ORDER_KEY = "cravngo-order";
+  const SESSION_KEY = "cravngo-session";
+  const FLASH_KEY = "cravngo-flash";
   const DATA = window.CRAVNGO_DATA;
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   const peso = (n) => "₱" + n.toLocaleString("en-PH");
   const firstName = (name) => String(name).trim().split(/\s+/)[0];
+  const initials = (name) =>
+    String(name).trim().split(/\s+/).slice(0, 2).map((word) => word[0]).join("").toUpperCase();
   const isPhMobile = (value) => /^(?:\+?63|0)?9\d{9}$/.test(String(value).replace(/[\s-]/g, ""));
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const page = location.pathname.split("/").pop() || "index.html";
 
-  /* ---------- Supabase (accounts, bookings, newsletter) ---------- */
+  // Only follow ?next= to our own pages, e.g. "book.html?type=pickup"
+  const safeNext = (value) => (/^[a-z]+\.html(\?[\w=&%-]*)?$/i.test(value || "") ? value : null);
+
+  /* ---------- Database: our functions in supabase/schema.sql, via Supabase's REST API ---------- */
   const CONFIG = window.CRAVNGO_CONFIG || {};
-  // Accept the "API URL" too (…supabase.co/rest/v1/) — the client needs just the project URL
-  const supabaseUrl = String(CONFIG.supabaseUrl || "").trim().replace(/\/rest\/v1\/?$/, "").replace(/\/+$/, "");
-  const db =
-    supabaseUrl && CONFIG.supabaseKey && window.supabase
-      ? window.supabase.createClient(supabaseUrl, CONFIG.supabaseKey.trim(), {
-          auth: { persistSession: false, autoRefreshToken: false },
-        })
-      : null;
-  if (window.supabase && !db) {
-    console.warn("Cravn’ Go: add your Supabase URL and key to js/config.js to turn on accounts, bookings and the newsletter.");
-  }
+  // Accept the "API URL" too (…supabase.co/rest/v1/) — we need just the project URL
+  const API_URL = String(CONFIG.supabaseUrl || "").trim().replace(/\/rest\/v1\/?$/, "").replace(/\/+$/, "");
+  const API_KEY = String(CONFIG.supabaseKey || "").trim();
+
+  // Call a database function → { data, error }
+  const rpc = async (fn, args = {}) => {
+    const headers = { apikey: API_KEY, "Content-Type": "application/json" };
+    if (API_KEY.startsWith("eyJ")) headers.Authorization = `Bearer ${API_KEY}`; // legacy "anon" keys
+    try {
+      const res = await fetch(`${API_URL}/rest/v1/rpc/${fn}`, { method: "POST", headers, body: JSON.stringify(args) });
+      const body = res.status === 204 ? null : await res.json().catch(() => null);
+      if (!res.ok) return { data: null, error: body || { message: `Request failed (${res.status})` } };
+      return { data: body, error: null };
+    } catch {
+      return { data: null, error: { message: "network" } };
+    }
+  };
+  const db = API_URL && API_KEY ? { rpc } : null;
+  if (!db) console.warn("Cravn’ Go: add your Supabase URL and key to js/config.js to turn on accounts, bookings and the newsletter.");
   const NOT_READY = "Online accounts and bookings aren’t switched on yet — please call us at 0930 559 1153.";
 
-  // Supabase error → { message, field }. Our database functions put the form field to fix in `hint`.
+  // Database error → { message, field }. Our functions put the form field to fix in `hint`.
   const dbError = (error) => {
     if (/fetch|network/i.test(error.message || "")) {
       return { message: "We couldn’t reach the server. Check your connection and try again.", field: null };
@@ -68,13 +85,154 @@
     navToggle.setAttribute("aria-expanded", String(open));
   };
   navToggle.addEventListener("click", () => setNav(!nav.classList.contains("is-open")));
+  window.matchMedia("(min-width: 861px)").addEventListener("change", () => setNav(false));
+
+  /* ---------- Toast + messages carried to the next page ---------- */
+  const toast = $("[data-toast]");
+  let toastTimer;
+  const showToast = (msg) => {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+  };
+  const flash = (msg) => {
+    try {
+      sessionStorage.setItem(FLASH_KEY, msg);
+    } catch {
+      /* no storage — the message is skipped */
+    }
+  };
+  try {
+    const pending = sessionStorage.getItem(FLASH_KEY);
+    if (pending) {
+      sessionStorage.removeItem(FLASH_KEY);
+      setTimeout(() => showToast(pending), 400);
+    }
+  } catch {
+    /* no storage */
+  }
+
+  /* ---------- Log-in session (token kept in this browser) ---------- */
+  const readSession = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+      return saved && saved.token && saved.user ? saved : null;
+    } catch {
+      return null;
+    }
+  };
+  let session = readSession();
+  const authListeners = [];
+
+  const setSession = (next) => {
+    session = next;
+    try {
+      if (next) localStorage.setItem(SESSION_KEY, JSON.stringify(next));
+      else localStorage.removeItem(SESSION_KEY);
+    } catch {
+      /* no storage — logged in for this page only */
+    }
+    document.documentElement.classList.toggle("signed-in", !!next);
+    renderAccount();
+    authListeners.forEach((fn) => fn(next ? next.user : null));
+  };
+
+  const logOut = async () => {
+    const token = session && session.token;
+    setSession(null);
+    if (db && token) await rpc("log_out", { p_token: token });
+  };
+
+  /* ---------- Header account area: "Log in", or the customer's name + menu ---------- */
+  const accountSlot = $("[data-account-slot]");
+  const USER_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>';
+
+  const closeAccountMenu = () => {
+    const button = $("[data-account-button]", accountSlot);
+    if (!button || button.getAttribute("aria-expanded") !== "true") return false;
+    button.setAttribute("aria-expanded", "false");
+    $(".account-dropdown", accountSlot).hidden = true;
+    return true;
+  };
+
+  function renderAccount() {
+    const user = session && session.user;
+    if (!user) {
+      const onAuthPage = page === "login.html" || page === "register.html";
+      const href = onAuthPage ? "login.html" : `login.html?next=${encodeURIComponent(page + location.search)}`;
+      accountSlot.innerHTML = `<a class="account-toggle" href="${href}" aria-label="Log in"${onAuthPage ? ' aria-current="page"' : ""}>${USER_ICON}<span class="account-toggle-label">Log in</span></a>`;
+    } else {
+      accountSlot.innerHTML = `
+        <div class="account-menu">
+          <button class="account-toggle is-user" type="button" aria-expanded="false" aria-controls="account-dropdown" data-account-button>
+            <span class="avatar" aria-hidden="true"></span>
+            <span class="account-toggle-label"></span>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="account-dropdown" id="account-dropdown" hidden>
+            <div class="account-dropdown-head"><strong></strong><span></span></div>
+            <a href="account.html">My bookings</a>
+            <a href="book.html">New booking</a>
+            <button type="button" data-log-out>Log out</button>
+          </div>
+        </div>`;
+      const button = $("[data-account-button]", accountSlot);
+      const dropdown = $(".account-dropdown", accountSlot);
+      $(".avatar", button).textContent = initials(user.full_name);
+      $(".account-toggle-label", button).textContent = firstName(user.full_name);
+      button.setAttribute("aria-label", `Account menu for ${user.full_name}`);
+      $(".account-dropdown-head strong", dropdown).textContent = user.full_name;
+      $(".account-dropdown-head span", dropdown).textContent = `@${user.username}`;
+
+      button.addEventListener("click", () => {
+        const open = dropdown.hidden;
+        button.setAttribute("aria-expanded", String(open));
+        dropdown.hidden = !open;
+      });
+      $("[data-log-out]", dropdown).addEventListener("click", async () => {
+        await logOut();
+        flash("You’re logged out. See you soon!");
+        location.href = page === "account.html" ? "index.html" : location.href;
+      });
+    }
+    accountSlot.classList.add("is-ready");
+  }
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".account-menu")) closeAccountMenu();
+  });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && nav.classList.contains("is-open")) {
+    if (e.key !== "Escape") return;
+    if (closeAccountMenu()) $("[data-account-button]", accountSlot).focus();
+    else if (nav.classList.contains("is-open")) {
       setNav(false);
       navToggle.focus();
     }
   });
-  window.matchMedia("(min-width: 861px)").addEventListener("change", () => setNav(false));
+
+  renderAccount();
+
+  // The saved session shows the name instantly; check it's still valid (it may have expired)
+  if (session && db) {
+    rpc("current_customer", { p_token: session.token }).then(({ data, error }) => {
+      if (error) return; // offline — keep the saved session for now
+      if (!data) setSession(null);
+      else if (JSON.stringify(data) !== JSON.stringify(session.user)) setSession({ token: session.token, user: data });
+    });
+  }
+
+  /* ---------- Show / hide password ---------- */
+  $$("[data-toggle-password]").forEach((btn) => {
+    const input = $("input", btn.parentElement);
+    btn.addEventListener("click", () => {
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.textContent = show ? "Hide" : "Show";
+      btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+      input.focus();
+    });
+  });
 
   /* ---------- Reveal on scroll ---------- */
   const io =
@@ -83,8 +241,11 @@
           (entries) => {
             entries.forEach((entry) => {
               if (!entry.isIntersecting) return;
-              entry.target.classList.add("in");
-              io.unobserve(entry.target);
+              const el = entry.target;
+              el.classList.add("in");
+              io.unobserve(el);
+              // Drop the stagger once revealed so hover effects respond instantly
+              setTimeout(() => el.style.removeProperty("--reveal-delay"), 2200);
             });
           },
           { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
@@ -95,22 +256,12 @@
   const observe = (elements) => {
     elements.forEach((el) => {
       const siblings = $$(":scope > .reveal", el.parentElement);
-      if (siblings.length > 1) el.style.transitionDelay = `${(siblings.indexOf(el) % 3) * 90}ms`;
+      if (siblings.length > 1) el.style.setProperty("--reveal-delay", `${(siblings.indexOf(el) % 3) * 90}ms`);
       if (io) io.observe(el);
       else el.classList.add("in");
     });
   };
   observe($$(".reveal"));
-
-  /* ---------- Toast ---------- */
-  const toast = $("[data-toast]");
-  let toastTimer;
-  const showToast = (msg) => {
-    toast.textContent = msg;
-    toast.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
-  };
 
   /* ---------- Dialogs ---------- */
   const openDialog = (dlg) => {
@@ -129,12 +280,39 @@
     });
   });
 
+  /* ---------- Little celebrations ---------- */
+  // A burst of Italian-flag confetti from inside an element (it needs position: relative)
+  const celebrate = (anchor) => {
+    if (reduceMotion.matches || !anchor || !anchor.animate) return;
+    const colors = ["#2f8a4a", "#fffaf1", "#c8372d", "#f1d7a8"];
+    for (let i = 0; i < 26; i++) {
+      const bit = document.createElement("span");
+      bit.className = "confetti";
+      bit.style.background = colors[i % colors.length];
+      anchor.appendChild(bit);
+      const angle = (i / 26) * Math.PI * 2 + Math.random() * 0.4;
+      const distance = 60 + Math.random() * 70;
+      const x = Math.cos(angle) * distance;
+      const y = Math.sin(angle) * distance;
+      bit
+        .animate(
+          [
+            { transform: "translate(-50%, -50%) rotate(0deg) scale(1)", opacity: 1 },
+            { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y + 40}px)) rotate(${200 + Math.random() * 400}deg) scale(0.6)`, opacity: 0 },
+          ],
+          { duration: 900 + Math.random() * 500, delay: 250, easing: "cubic-bezier(0.15, 0.7, 0.35, 1)", fill: "backwards" }
+        )
+        .finished.catch(() => {})
+        .finally(() => bit.remove());
+    }
+  };
+
   /* ---------- Order (cart), kept in this browser across pages ---------- */
   const menu = new Map(DATA.menu.map((dish) => [dish.id, dish]));
 
   const load = () => {
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      const saved = JSON.parse(localStorage.getItem(ORDER_KEY) || "{}");
       return Object.fromEntries(Object.entries(saved).filter(([id, q]) => menu.has(id) && q > 0));
     } catch {
       return {};
@@ -142,7 +320,7 @@
   };
   const save = () => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(order));
+      localStorage.setItem(ORDER_KEY, JSON.stringify(order));
     } catch {
       /* storage unavailable — the order still works on this page */
     }
@@ -209,6 +387,40 @@
     if (!order[id] && drawer.open) (linesEl.querySelector("[data-step]") || drawer.querySelector("[data-close]")).focus();
   };
 
+  const bumpCount = () => {
+    countEl.classList.remove("bump");
+    void countEl.offsetWidth;
+    countEl.classList.add("bump");
+  };
+
+  // The dish photo flies into the order bag in the header
+  const flyToCart = (fromImg) => {
+    if (reduceMotion.matches || !fromImg || !fromImg.animate) return Promise.resolve();
+    const from = fromImg.getBoundingClientRect();
+    const to = toggleBtn.getBoundingClientRect();
+    if (!from.width || !to.width) return Promise.resolve();
+    const size = Math.min(from.width, from.height, 140);
+    const ghost = document.createElement("img");
+    ghost.src = fromImg.currentSrc || fromImg.src;
+    ghost.alt = "";
+    ghost.className = "fly-img";
+    ghost.style.cssText = `left:${from.left + from.width / 2 - size / 2}px;top:${from.top + from.height / 2 - size / 2}px;width:${size}px;height:${size}px`;
+    document.body.appendChild(ghost);
+    const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+    const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+    return ghost
+      .animate(
+        [
+          { transform: "translate(0, 0) scale(1)", opacity: 1 },
+          { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 90}px) scale(0.55)`, opacity: 1, offset: 0.5 },
+          { transform: `translate(${dx}px, ${dy}px) scale(0.12)`, opacity: 0.35 },
+        ],
+        { duration: 800, easing: "cubic-bezier(0.5, 0, 0.3, 1)" }
+      )
+      .finished.catch(() => {})
+      .finally(() => ghost.remove());
+  };
+
   // "Add" buttons — menu cards are added by menu.js, so listen on the whole page
   document.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-add]");
@@ -216,10 +428,7 @@
     const id = btn.dataset.add;
     setQty(id, (order[id] || 0) + 1);
     showToast(`${menu.get(id).name} added · ${itemCount()} in your order`);
-
-    countEl.classList.remove("bump");
-    void countEl.offsetWidth;
-    countEl.classList.add("bump");
+    flyToCart(btn.closest(".dish")?.querySelector("img")).then(bumpCount);
 
     btn.classList.add("added");
     btn.firstChild.textContent = "Added";
@@ -286,7 +495,7 @@
 
   render();
 
-  /* ---------- Opening hours helpers (Philippine time) ---------- */
+  /* ---------- Opening hours and dates (Philippine time) ---------- */
   const toMinutes = (hm) => {
     const [h, m] = hm.split(":").map(Number);
     return h * 60 + m;
@@ -296,6 +505,13 @@
     return `${h % 12 || 12}${m ? ":" + String(m).padStart(2, "0") : ""} ${h < 12 ? "AM" : "PM"}`;
   };
   const hoursFor = (day) => DATA.hours.find((h) => h.days.includes(day));
+  const parseDate = (iso) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    return new Date(Date.UTC(y, m - 1, d));
+  };
+  // "Mon, Nov 2 at 6:30 PM" for a booking's date + time
+  const whenText = (b) =>
+    `${parseDate(b.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" })} at ${toLabel(b.time)}`;
 
   // Today's date and time in the Philippines, wherever the visitor is
   const manilaNow = () => {
@@ -311,7 +527,7 @@
     };
   };
 
-  /* ---------- Newsletter → Supabase "subscribe" function ---------- */
+  /* ---------- Newsletter ---------- */
   const subscribeForm = $("[data-subscribe-form]");
   if (subscribeForm) {
     const subscribeStatus = $("[data-subscribe-status]");
@@ -335,7 +551,7 @@
       }
       withBusy($("button[type=submit]", subscribeForm), "Subscribing…", async () => {
         setStatus("", true);
-        const { data: result, error } = await db.rpc("subscribe", { p_name: data.get("name"), p_email: data.get("email") });
+        const { data: result, error } = await rpc("subscribe", { p_name: data.get("name"), p_email: data.get("email") });
         if (error) return setStatus(dbError(error).message, false);
         subscribeForm.reset();
         setStatus(
@@ -348,10 +564,21 @@
 
   /* ---------- Shared with page scripts ---------- */
   window.CG = {
-    $, $$, peso, firstName, isPhMobile,
+    $, $$, peso, firstName, initials, isPhMobile, safeNext, reduceMotion,
     db, dbError, NOT_READY, withBusy,
-    showToast, openDialog, closeDialog, observe, setNav,
-    toMinutes, toLabel, hoursFor, manilaNow,
+    showToast, flash, openDialog, closeDialog, observe, setNav, celebrate,
+    toMinutes, toLabel, hoursFor, manilaNow, parseDate, whenText,
+    auth: {
+      user: () => (session ? session.user : null),
+      token: () => (session ? session.token : null),
+      set: (token, user) => setSession({ token, user }),
+      clear: () => setSession(null),
+      logOut,
+      // Called whenever someone logs in or out
+      onChange(fn) {
+        authListeners.push(fn);
+      },
+    },
     order: {
       items: () => Object.entries(order).map(([id, qty]) => ({ id, qty })),
       count: itemCount,

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in — Cravn’ Go</title>
+  <meta name="description" content="Log in to your Cravn’ Go account to book tables, order ahead and see your bookings.">
+  <meta name="theme-color" content="#1c1512">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cravn’ Go">
+  <meta property="og:title" content="Log in — Cravn’ Go">
+  <meta property="og:description" content="Log in to your Cravn’ Go account to book tables, order ahead and see your bookings.">
+  <meta property="og:image" content="images/hero.jpg">
+
+  <script>document.documentElement.classList.add("js");try{if(localStorage.getItem("cravngo-session"))document.documentElement.classList.add("signed-in")}catch(e){}</script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400..800&family=Marcellus&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ Header (same on every page) ============ -->
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Cravn’ Go home">
+        <span class="brand-name">Cravn’ Go</span>
+        <span class="brand-flag" aria-hidden="true"></span>
+        <span class="brand-sub">Italian Restaurant</span>
+      </a>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="book.html">Book</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Shows "Log in", or the customer's name + menu once logged in (js/main.js) -->
+        <div class="account-slot" data-account-slot>
+          <a class="account-toggle" href="login.html" aria-label="Log in"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="account-toggle-label">Log in</span></a>
+        </div>
+        <button class="order-toggle" type="button" data-open-order aria-label="Your order, 0 items">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="order-toggle-label">Your order</span>
+          <span class="order-count" data-order-count hidden>0</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" data-nav-toggle>
+          <span class="sr-only">Menu</span>
+          <span class="nav-toggle-bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ Page banner ============ -->
+    <section class="page-hero">
+      <img class="page-hero-img" src="images/service.jpg" width="1536" height="1024" alt="" fetchpriority="high" style="object-position: 50% 40%">
+      <div class="container">
+        <p class="eyebrow eyebrow-light">Welcome back</p>
+        <h1>Log in to your account</h1>
+        <p>See your bookings, reserve a table or order ahead in a few taps.</p>
+      </div>
+    </section>
+
+    <!-- ============ Log-in form ============ -->
+    <section class="section auth-section">
+      <div class="container">
+        <div class="auth-card reveal">
+          <form class="auth-form" data-login-form>
+            <h2>Log in</h2>
+            <label class="field">
+              <span>Username or email</span>
+              <input name="login" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="254" required>
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <span class="password-wrap">
+                <input name="password" type="password" autocomplete="current-password" maxlength="72" required>
+                <button class="password-toggle" type="button" data-toggle-password aria-label="Show password">Show</button>
+              </span>
+            </label>
+            <p class="form-error" role="alert" data-form-error></p>
+            <button class="btn btn-primary btn-block" type="submit">Log in</button>
+            <p class="auth-switch">New to Cravn’ Go? <a href="register.html" data-register-link>Create an account</a></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer (same on every page) ============ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a class="brand brand-light" href="index.html" aria-label="Cravn’ Go home">
+        <span class="brand-name">Cravn’ Go</span>
+        <span class="brand-flag" aria-hidden="true"></span>
+        <span class="brand-sub">Italian Restaurant</span>
+        </a>
+        <p>A taste of Italy, a touch of love.</p>
+      </div>
+      <address class="footer-contact">
+        The Lifestyle Strip, Sto. Tomas, Batangas<br>
+        <a href="tel:+639305591153">0930 559 1153</a><br>
+        <a href="mailto:latjhoseah09@gmail.com">latjhoseah09@gmail.com</a>
+      </address>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="menu.html">Menu</a>
+        <a href="book.html">Book</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="contact.html">Contact</a>
+        <a href="account.html">My account</a>
+        <a href="https://www.facebook.com/profile.php?id=61595608813635" target="_blank" rel="noopener">Facebook</a>
+      </nav>
+    </div>
+    <div class="container footer-base">
+      <p>© <span data-year>2026</span> Cravn’ Go. All rights reserved.</p>
+      <p class="script">Buon appetito!</p>
+    </div>
+  </footer>
+
+  <!-- ============ Order drawer (same on every page) ============ -->
+  <dialog class="drawer" id="order" aria-labelledby="order-title" data-drawer>
+    <div class="drawer-inner">
+      <header class="drawer-head">
+        <h2 id="order-title">Your order</h2>
+        <button class="icon-btn" type="button" data-close aria-label="Close order">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="drawer-empty" data-order-empty>
+        <p>Your order is empty.</p>
+        <p class="muted">Pick something delicious from the menu to get started.</p>
+        <a class="btn btn-primary" href="menu.html">Browse the menu</a>
+      </div>
+
+      <ul class="order-lines" data-order-lines></ul>
+
+      <footer class="drawer-foot" data-order-foot hidden>
+        <div class="order-total"><span>Total</span><strong data-order-total>₱0</strong></div>
+        <button class="btn btn-primary btn-block" type="button" data-checkout>Checkout</button>
+        <p class="muted small">Next, choose pick-up, delivery or a table reservation. Prefer to call? <a href="tel:+639305591153">0930 559 1153</a></p>
+        <div class="drawer-links">
+          <button class="link-btn" type="button" data-send-order>Send via Messenger instead</button>
+          <button class="link-btn" type="button" data-clear-order>Clear order</button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/login.js" defer></script>
+</body>
+</html>

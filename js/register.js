@@ -1,16 +1,23 @@
 /*
  * Cravn' Go — Create account page.
- * No password or login: each username and each email can be registered only once.
+ * Each username and each email can be registered only once. Creating an account logs you in.
  */
 (() => {
-  const { $, db, dbError, NOT_READY, withBusy, firstName, isPhMobile } = window.CG;
-  const USERNAME_KEY = "cravngo-username";
+  const { $, db, dbError, NOT_READY, withBusy, firstName, isPhMobile, auth, safeNext, celebrate, flash } = window.CG;
   const USERNAME_RE = /^[a-z0-9._]{3,20}$/i;
   const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   const TAKEN = {
     username: "That username is already taken.",
     email: "That email is already registered.",
   };
+
+  // Where to go afterwards, e.g. back to the booking form
+  const next = safeNext(new URLSearchParams(location.search).get("next"));
+  if (auth.user()) {
+    location.replace(next || "account.html");
+    return;
+  }
+  if (next) $("[data-login-link]").href = `login.html?next=${encodeURIComponent(next)}`;
 
   const form = $("[data-register-form]");
   const done = $("[data-register-done]");
@@ -72,11 +79,12 @@
     }
 
     withBusy($("[type=submit]", form), "Creating account…", async () => {
-      const { data: account, error } = await db.rpc("register_customer", {
+      const { data: result, error } = await db.rpc("register_customer", {
         p_username: data.username,
         p_full_name: data.full_name,
         p_email: data.email,
         p_phone: data.phone,
+        p_password: data.password,
       });
       if (error) {
         const { message, field } = dbError(error);
@@ -87,16 +95,19 @@
         return;
       }
 
-      try {
-        localStorage.setItem(USERNAME_KEY, account.username); // pre-fills the booking form
-      } catch {
-        /* not remembered — that's fine */
+      auth.set(result.token, result.user); // logged in — the header now shows their name
+      $("[data-done-name]", done).textContent = firstName(result.user.full_name);
+      $("[data-done-username]", done).textContent = result.user.username;
+      if (next) {
+        const primary = $("[data-done-primary]", done);
+        primary.href = next;
+        primary.textContent = "Continue booking";
       }
-      $("[data-done-name]", done).textContent = firstName(account.full_name);
-      $("[data-done-username]", done).textContent = account.username;
       form.hidden = true;
       done.hidden = false;
       done.focus();
+      celebrate($(".confirm-check", done));
+      flash(`Welcome to Cravn’ Go, ${firstName(result.user.full_name)}!`);
     });
   });
 })();

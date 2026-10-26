@@ -5,23 +5,27 @@
 -- whole file → Run. Safe to run again later (it updates menu, hours and
 -- functions without deleting customers, bookings or subscribers).
 --
--- There are no logins. Customers create an account with a username and
--- email that must both be unique, then book with that username or email.
+-- Accounts: customers sign up with a unique username and email plus a
+-- password, then log in with their username (or email) and password. The
+-- site keeps a random session token in the browser; the database stores
+-- only a hash of it. Passwords are stored as bcrypt hashes (pgcrypto).
 --
 -- The website never reads or writes tables directly. It calls the
--- functions at the bottom (register_customer, account_available,
--- create_booking, subscribe), which validate everything and price orders
+-- functions at the bottom, which validate everything and price orders
 -- from menu_items. Customer details and bookings can't be read from the
--- website at all; view them in the Supabase Table Editor.
+-- website except your own, while logged in. View everything in the
+-- Supabase Table Editor.
 -- =====================================================================
 
 create schema if not exists private;
+create schema if not exists extensions;
+create extension if not exists pgcrypto with schema extensions;
 
--- ---------- Upgrading from the first version (which used Supabase logins) ----------
--- That version's bookings were tied to login accounts, so its booking tables
--- (test data only) are rebuilt here. Nothing happens on a fresh project.
+-- ---------- Upgrading from earlier versions of this file ----------
+-- Version 1 used Supabase logins; its booking tables (test data only) are rebuilt.
 drop function if exists public.my_bookings();
 drop function if exists public.cancel_booking(uuid);
+drop function if exists public.register_customer(text, text, text, text);
 do $$
 begin
   if exists (select 1 from information_schema.columns
@@ -72,8 +76,20 @@ create table if not exists public.customers (
   phone      text not null,             -- 09XXXXXXXXX
   created_at timestamptz not null default now()
 );
+alter table public.customers add column if not exists password_hash text;          -- bcrypt
+alter table public.customers add column if not exists failed_logins smallint not null default 0;
+alter table public.customers add column if not exists locked_until  timestamptz;  -- after 5 wrong passwords
 create unique index if not exists customers_username_key on public.customers (username);
 create unique index if not exists customers_email_key    on public.customers (email_key);
+
+-- ---------- Log-in sessions ----------
+create table if not exists public.sessions (
+  token_hash  text primary key,         -- sha256 of the token; the token itself stays in the browser
+  customer_id uuid not null references public.customers (id) on delete cascade,
+  created_at  timestamptz not null default now(),
+  expires_at  timestamptz not null default now() + interval '30 days'
+);
+create index if not exists sessions_customer_idx on public.sessions (customer_id);
 
 -- ---------- Bookings: table reservations, pick-up and delivery orders ----------
 create table if not exists public.bookings (
@@ -117,10 +133,11 @@ create table if not exists public.subscribers (
 
 -- ---------- Row Level Security ----------
 -- Menu and hours are public. Everything else has no policy, so the website
--- can't read it; only the functions below (and you, in the dashboard) can.
+-- can't read it directly; only the functions below (and you, in the dashboard) can.
 alter table public.menu_items    enable row level security;
 alter table public.opening_hours enable row level security;
 alter table public.customers     enable row level security;
+alter table public.sessions      enable row level security;
 alter table public.bookings      enable row level security;
 alter table public.booking_items enable row level security;
 alter table public.subscribers   enable row level security;
@@ -169,7 +186,7 @@ as $$
 $$;
 
 -- The customer with this username or email, if any
-create or replace function private.find_customer(p_account text)
+create or replace function private.find_customer(p_login text)
 returns public.customers
 language sql
 stable
@@ -177,9 +194,56 @@ set search_path = ''
 as $$
   select c.*
   from public.customers c
-  where c.username = lower(btrim(coalesce(p_account, '')))
-     or c.email_key = private.email_key(p_account)
+  where c.username = lower(btrim(coalesce(p_login, '')))
+     or c.email_key = private.email_key(p_login)
   limit 1;
+$$;
+
+-- What the website may know about the logged-in customer
+create or replace function private.customer_json(c public.customers)
+returns jsonb
+language sql
+immutable
+set search_path = ''
+as $$
+  select jsonb_build_object('username', c.username, 'full_name', c.full_name, 'email', c.email, 'phone', c.phone);
+$$;
+
+create or replace function private.token_hash(p_token text)
+returns text
+language sql
+immutable
+set search_path = ''
+as $$
+  select encode(sha256(convert_to(coalesce(p_token, ''), 'UTF8')), 'hex');
+$$;
+
+-- Start a 30-day log-in session and return its token (kept only in the browser)
+create or replace function private.start_session(p_customer uuid)
+returns text
+language plpgsql
+set search_path = ''
+as $$
+declare
+  v_token text := encode(extensions.gen_random_bytes(32), 'hex');
+begin
+  delete from public.sessions where customer_id = p_customer and expires_at < now();
+  insert into public.sessions (token_hash, customer_id) values (private.token_hash(v_token), p_customer);
+  return v_token;
+end;
+$$;
+
+-- The customer a session token belongs to (all fields null if logged out or expired)
+create or replace function private.session_customer(p_token text)
+returns public.customers
+language sql
+stable
+set search_path = ''
+as $$
+  select c.*
+  from public.sessions s
+  join public.customers c on c.id = s.customer_id
+  where s.token_hash = private.token_hash(p_token) and s.expires_at > now();
 $$;
 
 -- One booking as JSON, with date/time in Philippine time
@@ -196,6 +260,7 @@ as $$
     'status',   b.status,
     'date',     to_char(b.scheduled_at at time zone 'Asia/Manila', 'YYYY-MM-DD'),
     'time',     to_char(b.scheduled_at at time zone 'Asia/Manila', 'HH24:MI'),
+    'upcoming', b.scheduled_at > now(),
     'guests',   b.guests,
     'occasion', b.occasion,
     'name',     b.contact_name,
@@ -237,9 +302,11 @@ as $$
   );
 $$;
 
--- Create an account. Usernames: 3–20 letters, numbers, dots or underscores.
+-- Create an account and log in → { token, user }.
+-- Usernames: 3–20 letters, numbers, dots or underscores. Passwords: 8–72 characters.
 -- Errors carry the form field to highlight in their hint.
-create or replace function public.register_customer(p_username text, p_full_name text, p_email text, p_phone text)
+create or replace function public.register_customer(
+  p_username text, p_full_name text, p_email text, p_phone text, p_password text)
 returns jsonb
 language plpgsql
 security definer
@@ -250,6 +317,7 @@ declare
   v_name     text := btrim(regexp_replace(coalesce(p_full_name, ''), '\s+', ' ', 'g'));
   v_email    text := lower(btrim(coalesce(p_email, '')));
   v_phone    text := private.normalize_ph_mobile(p_phone);
+  v_customer public.customers;
   v_index    text;
 begin
   if v_username !~ '^[a-z0-9._]{3,20}$' then
@@ -264,28 +332,95 @@ begin
   if v_phone is null then
     raise exception 'Please enter a valid mobile number, e.g. 0917 123 4567.' using hint = 'phone';
   end if;
+  if char_length(coalesce(p_password, '')) < 8 then
+    raise exception 'Use at least 8 characters for your password.' using hint = 'password';
+  end if;
+  if octet_length(p_password) > 72 then
+    raise exception 'Please keep your password under 72 characters.' using hint = 'password';
+  end if;
 
   if exists (select 1 from public.customers where username = v_username) then
     raise exception 'That username is already taken. Please choose another.' using hint = 'username';
   end if;
   if exists (select 1 from public.customers where email_key = private.email_key(v_email)) then
-    raise exception 'That email is already registered. Use your existing username to book.' using hint = 'email';
+    raise exception 'That email is already registered. Log in instead.' using hint = 'email';
   end if;
 
   begin
-    insert into public.customers (username, full_name, email, email_key, phone)
-    values (v_username, v_name, v_email, private.email_key(v_email), v_phone);
+    insert into public.customers (username, full_name, email, email_key, phone, password_hash)
+    values (v_username, v_name, v_email, private.email_key(v_email), v_phone,
+            extensions.crypt(p_password, extensions.gen_salt('bf', 10)))
+    returning * into v_customer;
   exception when unique_violation then
     -- Two people grabbed the same username/email at the same moment
     get stacked diagnostics v_index = constraint_name;
     if v_index = 'customers_username_key' then
       raise exception 'That username is already taken. Please choose another.' using hint = 'username';
     end if;
-    raise exception 'That email is already registered. Use your existing username to book.' using hint = 'email';
+    raise exception 'That email is already registered. Log in instead.' using hint = 'email';
   end;
 
-  return jsonb_build_object('username', v_username, 'full_name', v_name, 'email', v_email, 'phone', v_phone);
+  return jsonb_build_object('token', private.start_session(v_customer.id), 'user', private.customer_json(v_customer));
 end;
+$$;
+
+-- Log in with username or email + password → { token, user } or { error, field }.
+-- (Returns the error instead of raising it so the failed-attempt counter is saved.)
+-- After 5 wrong passwords the account is locked for 10 minutes.
+create or replace function public.log_in(p_login text, p_password text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_customer public.customers := private.find_customer(p_login);
+  v_wrong    jsonb := jsonb_build_object('error', 'That username or email and password don’t match.', 'field', 'password');
+begin
+  if v_customer.id is null then
+    perform extensions.crypt(coalesce(p_password, ''), extensions.gen_salt('bf', 10)); -- same delay as a real check
+    return v_wrong;
+  end if;
+
+  if v_customer.locked_until > now() then
+    return jsonb_build_object('error', 'Too many tries. Please wait a few minutes and try again.', 'field', 'password');
+  end if;
+
+  if v_customer.password_hash is null
+     or extensions.crypt(coalesce(p_password, ''), v_customer.password_hash) <> v_customer.password_hash then
+    update public.customers
+    set failed_logins = case when failed_logins >= 4 then 0 else failed_logins + 1 end,
+        locked_until  = case when failed_logins >= 4 then now() + interval '10 minutes' else locked_until end
+    where id = v_customer.id;
+    return v_wrong;
+  end if;
+
+  update public.customers set failed_logins = 0, locked_until = null where id = v_customer.id;
+  return jsonb_build_object('token', private.start_session(v_customer.id), 'user', private.customer_json(v_customer));
+end;
+$$;
+
+-- Who is logged in with this token? → user, or null if logged out / expired
+create or replace function public.current_customer(p_token text)
+returns jsonb
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select private.customer_json(c)
+  from private.session_customer(p_token) c
+  where c.id is not null;
+$$;
+
+-- Log out (ends this browser's session)
+create or replace function public.log_out(p_token text)
+returns void
+language sql
+security definer
+set search_path = ''
+as $$
+  delete from public.sessions where token_hash = private.token_hash(p_token);
 $$;
 
 -- Newsletter sign-up. Returns 'subscribed' or 'already'.
@@ -313,8 +448,8 @@ begin
 end;
 $$;
 
--- Create a reservation, pick-up or delivery for a registered customer.
--- booking = { account: username or email, type, date: 'YYYY-MM-DD', time: 'HH:MM', notes,
+-- Create a reservation, pick-up or delivery for the logged-in customer.
+-- booking = { token, type, date: 'YYYY-MM-DD', time: 'HH:MM', notes,
 --             guests, occasion,                      -- reserve
 --             address, barangay, city, landmark,     -- delivery
 --             items: [{ id, qty }] }                 -- required for pickup/delivery
@@ -326,7 +461,7 @@ security definer
 set search_path = ''
 as $$
 declare
-  v_customer public.customers;
+  v_customer public.customers := private.session_customer(booking ->> 'token');
   v_type     text := booking ->> 'type';
   v_date     date;
   v_time     time;
@@ -345,14 +480,8 @@ declare
   v_ref      text;
   v_id       uuid;
 begin
-  -- Who: a registered username or email
-  if nullif(btrim(booking ->> 'account'), '') is null then
-    raise exception 'Please enter your username or email.' using hint = 'account';
-  end if;
-  v_customer := private.find_customer(booking ->> 'account');
   if v_customer.id is null then
-    raise exception 'We couldn’t find an account with that username or email. Create one first — it only takes a minute.'
-      using hint = 'account';
+    raise exception 'Please log in to book.' using hint = 'auth';
   end if;
 
   if v_type is null or v_type not in ('reserve', 'pickup', 'delivery') then
@@ -489,11 +618,72 @@ begin
 end;
 $$;
 
+-- The logged-in customer's bookings, newest first
+create or replace function public.my_bookings(p_token text)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+declare
+  v_customer public.customers := private.session_customer(p_token);
+begin
+  if v_customer.id is null then
+    raise exception 'Please log in again.' using hint = 'auth';
+  end if;
+  return coalesce((
+    select jsonb_agg(private.booking_json(b.id) order by b.created_at desc)
+    from public.bookings b
+    where b.customer_id = v_customer.id), '[]'::jsonb);
+end;
+$$;
+
+-- Cancel one of your own pending, upcoming bookings
+create or replace function public.cancel_booking(p_token text, p_id uuid)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_customer public.customers := private.session_customer(p_token);
+  v          public.bookings;
+begin
+  if v_customer.id is null then
+    raise exception 'Please log in again.' using hint = 'auth';
+  end if;
+
+  select * into v
+  from public.bookings
+  where id = p_id and customer_id = v_customer.id
+  for update;
+
+  if not found then
+    raise exception 'Booking not found.';
+  end if;
+  if v.status <> 'pending' then
+    raise exception 'This booking can no longer be cancelled.';
+  end if;
+  if v.scheduled_at <= now() then
+    raise exception 'This booking time has already passed.';
+  end if;
+
+  update public.bookings set status = 'cancelled' where id = v.id;
+  return private.booking_json(v.id);
+end;
+$$;
+
 -- ---------- Who may call what ----------
 revoke all on schema private from public, anon, authenticated;
 revoke execute on all functions in schema private from public, anon, authenticated;
 
-grant execute on function public.account_available(text, text)               to anon, authenticated;
-grant execute on function public.register_customer(text, text, text, text)  to anon, authenticated;
-grant execute on function public.subscribe(text, text)                       to anon, authenticated;
-grant execute on function public.create_booking(jsonb)                       to anon, authenticated;
+grant execute on function public.account_available(text, text)                     to anon, authenticated;
+grant execute on function public.register_customer(text, text, text, text, text)  to anon, authenticated;
+grant execute on function public.log_in(text, text)                                to anon, authenticated;
+grant execute on function public.current_customer(text)                            to anon, authenticated;
+grant execute on function public.log_out(text)                                     to anon, authenticated;
+grant execute on function public.subscribe(text, text)                             to anon, authenticated;
+grant execute on function public.create_booking(jsonb)                             to anon, authenticated;
+grant execute on function public.my_bookings(text)                                 to anon, authenticated;
+grant execute on function public.cancel_booking(text, uuid)                        to anon, authenticated;

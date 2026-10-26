@@ -1,6 +1,6 @@
 /* Cravn' Go — dish cards for the Menu page and the home page favorites */
 (() => {
-  const { $, $$, peso, observe } = window.CG;
+  const { $, $$, peso, observe, reduceMotion } = window.CG;
   const DATA = window.CRAVNGO_DATA;
 
   const card = (dish) => {
@@ -39,14 +39,22 @@
     observe($$(".reveal", grid));
   });
 
-  // Category filter on the Menu page
+  // Category filter on the Menu page; the dishes that stay pop back in one by one
   const filters = $$("[data-filter]");
   filters.forEach((btn) =>
     btn.addEventListener("click", () => {
       filters.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
-      $$("[data-dishes] .dish").forEach((el) => {
+      const shown = $$("[data-dishes] .dish").filter((el) => {
         el.hidden = btn.dataset.filter !== "all" && el.dataset.category !== btn.dataset.filter;
+        return !el.hidden;
       });
+      if (reduceMotion.matches) return;
+      shown.forEach((el, i) =>
+        el.animate(
+          [{ opacity: 0, transform: "translateY(18px) scale(0.97)" }, { opacity: 1, transform: "none" }],
+          { duration: 450, delay: i * 60, easing: "cubic-bezier(0.2, 0.7, 0.2, 1)", fill: "backwards" }
+        )
+      );
     })
   );
 })();

@@ -13,7 +13,7 @@
   <meta property="og:description" content="Pasta, chicken, desserts and drinks at Cravn’ Go — from ₱95. Add dishes and order for pick-up or delivery.">
   <meta property="og:image" content="images/hero.jpg">
 
-  <script>document.documentElement.classList.add("js")</script>
+  <script>document.documentElement.classList.add("js");try{if(localStorage.getItem("cravngo-session"))document.documentElement.classList.add("signed-in")}catch(e){}</script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,10 +44,10 @@
       </nav>
 
       <div class="header-actions">
-        <a class="account-toggle" href="register.html" aria-label="Create an account">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-          <span class="account-toggle-label">Create account</span>
-        </a>
+        <!-- Shows "Log in", or the customer's name + menu once logged in (js/main.js) -->
+        <div class="account-slot" data-account-slot>
+          <a class="account-toggle" href="login.html" aria-label="Log in"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="account-toggle-label">Log in</span></a>
+        </div>
         <button class="order-toggle" type="button" data-open-order aria-label="Your order, 0 items">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
           <span class="order-toggle-label">Your order</span>
@@ -72,6 +72,26 @@
         <p>Freshly prepared dishes crafted to satisfy every craving. Tap Add to build your order.</p>
       </div>
     </section>
+
+    <!-- ============ Moving ribbon ============ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Carbonara</span>
+        <span>Lasagna</span>
+        <span>Chicken Alfredo</span>
+        <span>Chicken Piccata</span>
+        <span>Tiramisu</span>
+        <span>Limonata</span>
+        <span>Buon appetito</span>
+        <span>Carbonara</span>
+        <span>Lasagna</span>
+        <span>Chicken Alfredo</span>
+        <span>Chicken Piccata</span>
+        <span>Tiramisu</span>
+        <span>Limonata</span>
+        <span>Buon appetito</span>
+      </div>
+    </div>
 
     <!-- ============ Dishes ============ -->
     <section class="section menu">
@@ -120,7 +140,7 @@
         <a href="book.html">Book</a>
         <a href="gallery.html">Gallery</a>
         <a href="contact.html">Contact</a>
-        <a href="register.html">Create account</a>
+        <a href="account.html">My account</a>
         <a href="https://www.facebook.com/profile.php?id=61595608813635" target="_blank" rel="noopener">Facebook</a>
       </nav>
     </div>
@@ -162,6 +182,7 @@
 
   <div class="toast" role="status" aria-live="polite" data-toast></div>
 
+  <script src="js/config.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/main.js" defer></script>
   <script src="js/menu.js" defer></script>

@@ -5,9 +5,10 @@ Customer accounts, bookings (reserve a table, pick-up, delivery) and the newslet
 are stored in **Supabase** (a hosted database), so the site deploys to **Vercel**
 with no server code.
 
-There are **no logins or passwords**. A customer creates an account with a username
-and email, and each of those can only be registered once. They then book by typing
-that username or email.
+**Accounts:** customers create an account with a username, email, mobile number and
+password. Each username and email can only be registered once. They log in with their
+username *or* email plus password. Once logged in, their name shows in the header, they can
+book, and **My account** lists their bookings (with cancel). No email confirmation needed.
 
 ## Files
 
@@ -16,25 +17,28 @@ that username or email.
 | `index.html`         | Home: hero, highlights, customer favorites, newsletter            |
 | `about.html`         | Our story and why choose us                                       |
 | `menu.html`          | Full menu with filters and "Add" buttons                          |
-| `book.html`          | Reserve a table, order for pick-up, or order for delivery         |
+| `book.html`          | Reserve a table, order for pick-up, or order for delivery (log-in required) |
 | `gallery.html`       | Photo gallery                                                     |
 | `contact.html`       | Address, hours, map, message form, newsletter                     |
-| `register.html`      | Create an account (no duplicate usernames or emails)              |
-| `css/styles.css`     | All the styling                                                   |
+| `register.html`      | Create an account                                                 |
+| `login.html`         | Log in                                                            |
+| `account.html`       | My account: details, bookings, cancel, log out                    |
+| `css/styles.css`     | All the styling and animations                                    |
 | `js/config.js`       | Your Supabase URL and key                                         |
 | `js/data.js`         | Dishes, prices, photos and opening hours                          |
-| `js/main.js`         | Shared by every page: header, order drawer, newsletter            |
-| `js/menu.js`, `js/book.js`, `js/register.js`, `js/gallery.js`, `js/contact.js` | One script per page |
+| `js/main.js`         | Shared by every page: header + account menu, order drawer, newsletter |
+| `js/menu.js`, `js/book.js`, `js/register.js`, `js/login.js`, `js/account.js`, `js/gallery.js`, `js/contact.js` | One script per page |
 | `supabase/schema.sql`| The database: tables, rules and functions                         |
 
 The header, footer and order drawer are repeated in every `.html` page. If you change
-the navigation, change it in all seven pages.
+the navigation, change it in all nine pages.
 
-## 1. Set up the database (once)
+## 1. Set up the database
 
 1. Create a free project at [supabase.com](https://supabase.com).
 2. In your project, open **SQL Editor → New query**, paste the whole of
    [`supabase/schema.sql`](supabase/schema.sql) and click **Run**.
+   **Run it again whenever this file changes** — it's safe to re-run and keeps your data.
 3. Copy your **Project URL** and **public key** into [`js/config.js`](js/config.js). Either:
    - click **Connect** at the top of your project dashboard, or
    - open **Project Settings** (the gear icon). The Project URL is under **Data API**,
@@ -55,10 +59,13 @@ the navigation, change it in all seven pages.
 
 In Supabase → **Table Editor**:
 
-- **`customers`**: everyone who created an account.
-- **`bookings`**: new reservations and orders, with the customer's name and phone.
-  The food is in **`booking_items`**. Change `status` to `confirmed`, `completed` or `cancelled`.
+- **`customers`**: everyone who created an account (passwords are stored only as secure hashes).
+- **`bookings`**: reservations and orders, with the customer's name and phone.
+  The food is in **`booking_items`**. Change `status` to `confirmed`, `completed` or `cancelled`;
+  customers see the new status in My account.
 - **`subscribers`**: newsletter sign-ups.
+- **Forgotten password?** There's no reset email. Delete the customer's row in `customers`
+  (their bookings are removed too) and they can sign up again.
 
 ## Changing prices or opening hours
 

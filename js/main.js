@@ -16,9 +16,11 @@
 
   /* ---------- Supabase (accounts, bookings, newsletter) ---------- */
   const CONFIG = window.CRAVNGO_CONFIG || {};
+  // Accept the "API URL" too (…supabase.co/rest/v1/) — the client needs just the project URL
+  const supabaseUrl = String(CONFIG.supabaseUrl || "").trim().replace(/\/rest\/v1\/?$/, "").replace(/\/+$/, "");
   const db =
-    CONFIG.supabaseUrl && CONFIG.supabaseKey && window.supabase
-      ? window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey, {
+    supabaseUrl && CONFIG.supabaseKey && window.supabase
+      ? window.supabase.createClient(supabaseUrl, CONFIG.supabaseKey.trim(), {
           auth: { persistSession: false, autoRefreshToken: false },
         })
       : null;

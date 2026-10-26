@@ -23,9 +23,11 @@ create extension if not exists pgcrypto with schema extensions;
 
 -- ---------- Upgrading from earlier versions of this file ----------
 -- Version 1 used Supabase logins; its booking tables (test data only) are rebuilt.
+-- Functions whose parameters changed must be dropped first (Postgres can't rename them in place).
 drop function if exists public.my_bookings();
 drop function if exists public.cancel_booking(uuid);
 drop function if exists public.register_customer(text, text, text, text);
+drop function if exists private.find_customer(text);
 do $$
 begin
   if exists (select 1 from information_schema.columns

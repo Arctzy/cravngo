@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cravn’ Go — Italian Restaurant</title>
+  <meta name="description" content="Cravn’ Go is a cozy Italian restaurant serving creamy pastas, lemony chicken piccata, tiramisu and fresh limonata. A taste of Italy, a touch of love.">
+  <meta name="theme-color" content="#1c1512">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cravn’ Go">
+  <meta property="og:title" content="Cravn’ Go — Italian Restaurant">
+  <meta property="og:description" content="Fresh flavors, daily. Pasta, chicken, dolci and drinks made with quality ingredients.">
+  <meta property="og:image" content="images/hero.jpg">
+
+  <script>document.documentElement.classList.add("js")</script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400..800&family=Marcellus&display=swap">
+  <link rel="stylesheet" href="styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Cravn’ Go",
+    "slogan": "A Taste of Italy, A Touch of Love.",
+    "servesCuisine": "Italian",
+    "priceRange": "₱95–₱300",
+    "image": "images/hero.jpg",
+    "telephone": "+639305591153",
+    "email": "latjhoseah09@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "The Lifestyle Strip",
+      "addressLocality": "Sto. Tomas",
+      "addressRegion": "Batangas",
+      "addressCountry": "PH"
+    },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"], "opens": "11:00", "closes": "21:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday", "Saturday"], "opens": "11:00", "closes": "23:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "15:00", "closes": "23:00" }
+    ],
+    "acceptsReservations": true,
+    "sameAs": ["https://www.facebook.com/profile.php?id=61595608813635"]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ Header ============ -->
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Cravn’ Go, back to top">
+        <span class="brand-name">Cravn’ Go</span>
+        <span class="brand-flag" aria-hidden="true"></span>
+        <span class="brand-sub">Italian Restaurant</span>
+      </a>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#book">Book</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#visit">Visit</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="account-toggle" type="button" data-account-toggle aria-label="Sign in or create an account">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+          <span class="account-toggle-label" data-account-label>Sign in</span>
+        </button>
+        <button class="order-toggle" type="button" data-open-order aria-label="Your order, 0 items">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="order-toggle-label">Your order</span>
+          <span class="order-count" data-order-count hidden>0</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" data-nav-toggle>
+          <span class="sr-only">Menu</span>
+          <span class="nav-toggle-bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ Hero ============ -->
+    <section class="hero" id="top">
+      <img class="hero-img" src="images/hero.jpg" width="1600" height="900" fetchpriority="high"
+           alt="A rustic wooden table spread with creamy pasta, spaghetti bolognese, a Margherita pizza, caprese salad, shrimp pasta and grilled chicken">
+      <div class="container hero-content">
+        <p class="eyebrow eyebrow-light">Good food · Great vibes · Always</p>
+        <h1>Fresh flavors,<br><em>daily.</em></h1>
+        <p class="hero-lede">Discover our diverse menu offerings — quality ingredients, expertly prepared, and served with a whole lot of love.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#menu">See the menu</a>
+          <a class="btn btn-ghost" href="#book" data-book-type="reserve">Book a table</a>
+        </div>
+      </div>
+      <div class="container">
+        <ul class="hero-facts">
+          <li><strong>Made fresh</strong><span>Every dish, every day</span></li>
+          <li><strong>From ₱95</strong><span>Great food, fair prices</span></li>
+          <li><strong>Pasta to dolci</strong><span>Something for every craving</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ Intro / pillars ============ -->
+    <section class="section intro">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Fresh flavors await</p>
+          <h2>A culinary journey that brings friends and family together.</h2>
+        </div>
+
+        <div class="pillars">
+          <article class="pillar reveal">
+            <div class="pillar-media">
+              <img src="images/chicken-alfredo.jpg" width="736" height="1104" loading="lazy"
+                   alt="Sliced grilled chicken over creamy fettuccine Alfredo with parsley and Parmesan">
+            </div>
+            <span class="pillar-num">01</span>
+            <h3>Quality ingredients</h3>
+            <p>We source only the freshest, highest-quality ingredients so every dish meets our standard of excellence.</p>
+          </article>
+          <article class="pillar reveal">
+            <div class="pillar-media">
+              <img src="images/recipes.jpg" width="1536" height="1024" loading="lazy"
+                   alt="A Cravn’ Go chef finishing a plate of chicken piccata with fresh parsley">
+            </div>
+            <span class="pillar-num">02</span>
+            <h3>Creative recipes</h3>
+            <p>Our chefs craft inventive, flavorful recipes that keep your taste buds excited with every visit.</p>
+          </article>
+          <article class="pillar reveal">
+            <div class="pillar-media">
+              <img src="images/quality.jpg" width="1295" height="1214" loading="lazy"
+                   alt="A smiling Cravn’ Go server bringing a plate of carbonara to a guest’s table">
+            </div>
+            <span class="pillar-num">03</span>
+            <h3>Excellent service</h3>
+            <p>Friendly, attentive service in a welcoming room designed for a memorable meal.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ About ============ -->
+    <section class="section about" id="about">
+      <div class="container about-grid">
+        <figure class="about-media reveal">
+          <img src="images/service.jpg" width="1536" height="1024" loading="lazy"
+               alt="Four friends laughing over pasta, pizza and drinks under the Cravn’ Go sign">
+          <figcaption class="about-quote">
+            <span class="flag-rule" aria-hidden="true"></span>
+            <q>A taste of Italy, a touch of love.</q>
+          </figcaption>
+        </figure>
+
+        <div class="about-copy reveal">
+          <p class="eyebrow">Our story</p>
+          <h2>Our culinary mission</h2>
+          <p class="lead">We bring people together through the authentic flavors of Italy — serving delicious, high-quality dishes made with fresh ingredients and passion.</p>
+          <p>We strive for warm hospitality, excellent service and a welcoming atmosphere where every guest can enjoy a memorable Italian meal. At Cravn’ Go, that means cooking from scratch, caring about every plate, and keeping sustainability and customer satisfaction at the heart of what we do.</p>
+          <a class="btn btn-primary" href="#menu">Explore the menu</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Why choose us ============ -->
+    <section class="section why">
+      <div class="container">
+        <div class="section-head section-head-split reveal">
+          <div>
+            <p class="eyebrow eyebrow-light">Why choose us</p>
+            <h2>Exceptional food and service, making every meal special.</h2>
+          </div>
+        </div>
+
+        <ul class="why-list">
+          <li class="reveal">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26C6 14 14 6 26 6c0 12-8 20-20 20Z"/><path d="M6 26 18 14"/></svg>
+            <h3>Freshness</h3>
+            <p>We prioritize freshness in everything we serve for the best flavor and quality.</p>
+          </li>
+          <li class="reveal">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2"/><rect x="18" y="5" width="9" height="9" rx="2"/><rect x="5" y="18" width="9" height="9" rx="2"/><rect x="18" y="18" width="9" height="9" rx="2"/></svg>
+            <h3>Variety</h3>
+            <p>A menu for every taste, dietary preference and occasion.</p>
+          </li>
+          <li class="reveal">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M11 26V6h6.5a5.5 5.5 0 0 1 0 11H11"/><path d="M7 10h18M7 14h18"/></svg>
+            <h3>Affordable</h3>
+            <p>Delicious, quality meals at prices that give real value to every guest.</p>
+          </li>
+          <li class="reveal">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3v6"/><path d="M8 18a8 8 0 0 1 16 0H8Z"/><path d="M13 22a3 3 0 0 0 6 0"/></svg>
+            <h3>Ambience</h3>
+            <p>Relax in a clean, modern room that makes every meal feel like an occasion.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ Menu ============ -->
+    <section class="section menu" id="menu">
+      <div class="container">
+        <div class="section-head section-head-center reveal">
+          <p class="eyebrow">The menu</p>
+          <h2>Discover our delicious menu</h2>
+          <p class="section-sub">Freshly prepared dishes crafted to satisfy every craving. Tap <strong>Add</strong> to build your order.</p>
+        </div>
+
+        <div class="dishes">
+          <article class="dish reveal" data-item data-id="carbonara" data-name="Carbonara" data-price="120">
+            <div class="dish-media">
+              <img src="images/carbonara.jpg" width="736" height="1315" loading="lazy" style="object-position: 50% 72%"
+                   alt="Spaghetti carbonara topped with crispy bacon and grated Parmesan">
+              <span class="badge">Customer favorite</span>
+            </div>
+            <div class="dish-body">
+              <p class="dish-cat">Pasta</p>
+              <div class="dish-head"><h3>Carbonara</h3><span class="price">₱120</span></div>
+              <p>Creamy pasta tossed with savory bacon, garlic and Parmesan — rich, comforting and flavorful in every bite.</p>
+              <button class="add-btn" type="button" data-add>Add<span class="sr-only"> Carbonara to order</span></button>
+            </div>
+          </article>
+
+          <article class="dish reveal" data-item data-id="lasagna" data-name="Lasagna" data-price="150">
+            <div class="dish-media">
+              <img src="images/lasagna.jpg" width="736" height="736" loading="lazy"
+                   alt="A slice of layered meat lasagna with melted cheese and a basil leaf">
+            </div>
+            <div class="dish-body">
+              <p class="dish-cat">Pasta</p>
+              <div class="dish-head"><h3>Lasagna</h3><span class="price">₱150</span></div>
+              <p>Layers of tender pasta, rich meat sauce and creamy béchamel, topped with melted cheese and baked golden.</p>
+              <button class="add-btn" type="button" data-add>Add<span class="sr-only"> Lasagna to order</span></button>
+            </div>
+          </article>
+
+          <article class="dish reveal" data-item data-id="chicken-alfredo" data-name="Chicken Alfredo" data-price="300">
+            <div class="dish-media">
+              <img src="images/chicken-alfredo.jpg" width="736" height="1104" loading="lazy" style="object-position: 50% 45%"
+                   alt="Grilled chicken breast sliced over fettuccine Alfredo">
+            </div>
+            <div class="dish-body">
+              <p class="dish-cat">Pasta</p>
+              <div class="dish-head"><h3>Chicken Alfredo</h3><span class="price">₱300</span></div>
+              <p>Tender chicken breast tossed with creamy Alfredo sauce and perfectly cooked pasta, finished with Parmesan.</p>
+              <button class="add-btn" type="button" data-add>Add<span class="sr-only"> Chicken Alfredo to order</span></button>
+            </div>
+          </article>
+
+          <article class="dish reveal" data-item data-id="chicken-piccata" data-name="Chicken Piccata" data-price="250">
+            <div class="dish-media">
+              <img src="images/chicken-piccata.jpg" width="600" height="804" loading="lazy" style="object-position: 50% 55%"
+                   alt="Pan-seared chicken piccata with lemon slices and capers in butter sauce">
+              <span class="badge">Customer favorite</span>
+            </div>
+            <div class="dish-body">
+              <p class="dish-cat">Chicken</p>
+              <div class="dish-head"><h3>Chicken Piccata</h3><span class="price">₱250</span></div>
+              <p>Pan-seared chicken breast in a tangy lemon-butter sauce with capers — bright, savory and refreshing.</p>
+              <button class="add-btn" type="button" data-add>Add<span class="sr-only"> Chicken Piccata to order</span></button>
+            </div>
+          </article>
+
+          <article class="dish reveal" data-item data-id="tiramisu" data-name="Tiramisu" data-price="150">
+            <div class="dish-media">
+              <img src="images/tiramisu.jpg" width="736" height="981" loading="lazy" style="object-position: 50% 55%"
+                   alt="A square of tiramisu dusted with cocoa and topped with chocolate curls">
+              <span class="badge">Customer favorite</span>
+            </div>
+            <div class="dish-body">
+              <p class="dish-cat">Dessert</p>
+              <div class="dish-head"><h3>Tiramisu</h3><span class="price">₱150</span></div>
+              <p>Coffee-soaked ladyfingers and smooth mascarpone cream, dusted with cocoa for an indulgent finish.</p>
+              <button class="add-btn" type="button" data-add>Add<span class="sr-only"> Tiramisu to order</span></button>
+            </div>
+          </article>
+
+          <article class="dish reveal" data-item data-id="limonata" data-name="Limonata" data-price="95">
+            <div class="dish-media">
+              <img src="images/limonata.jpg" width="736" height="736" loading="lazy"
+                   alt="A glass of iced limonata garnished with a lemon slice and mint">
+            </div>
+            <div class="dish-body">
+              <p class="dish-cat">Drinks</p>
+              <div class="dish-head"><h3>Limonata</h3><span class="price">₱95</span></div>
+              <p>Italian-style lemonade made with freshly squeezed lemons, balanced with just enough sweetness.</p>
+              <button class="add-btn" type="button" data-add>Add<span class="sr-only"> Limonata to order</span></button>
+            </div>
+          </article>
+        </div>
+
+        <p class="menu-note">Prices in Philippine pesos.</p>
+      </div>
+    </section>
+
+    <!-- ============ Book & order ============ -->
+    <section class="section book" id="book">
+      <div class="container">
+        <div class="section-head section-head-center reveal">
+          <p class="eyebrow">Book &amp; order</p>
+          <h2>Reserve a table or order ahead</h2>
+          <p class="section-sub">Dine in, pick up or get it delivered. Bookings are saved to your account so you can check or cancel them anytime.</p>
+        </div>
+
+        <form class="book-card reveal" data-booking-form>
+          <fieldset class="book-types">
+            <legend class="sr-only">How would you like to enjoy Cravn’ Go?</legend>
+            <label class="book-type">
+              <input type="radio" name="type" value="reserve" checked>
+              <span class="book-type-body">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h18M6 10v10M18 10v10M8 6h8"/></svg>
+                <strong>Reserve a table</strong>
+                <small>Dine in with us</small>
+              </span>
+            </label>
+            <label class="book-type">
+              <input type="radio" name="type" value="pickup">
+              <span class="book-type-body">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+                <strong>Pick up</strong>
+                <small>Order ahead, collect in store</small>
+              </span>
+            </label>
+            <label class="book-type">
+              <input type="radio" name="type" value="delivery">
+              <span class="book-type-body">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l3 3v3h-7"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/></svg>
+                <strong>Delivery</strong>
+                <small>We bring it to your door</small>
+              </span>
+            </label>
+          </fieldset>
+
+          <div class="book-layout">
+            <div class="book-fields">
+              <fieldset class="book-group">
+                <legend data-when-legend>Date &amp; time</legend>
+                <div class="field-row">
+                  <label class="field">
+                    <span>Date</span>
+                    <input name="date" type="date" required data-book-date>
+                  </label>
+                  <label class="field">
+                    <span data-time-label>Time</span>
+                    <select name="time" required data-book-time></select>
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="book-group" data-for="reserve">
+                <legend>Your table</legend>
+                <div class="field-row">
+                  <label class="field">
+                    <span>Guests</span>
+                    <select name="guests" required data-book-guests></select>
+                  </label>
+                  <label class="field">
+                    <span>Occasion <em>(optional)</em></span>
+                    <select name="occasion">
+                      <option value="">Just a meal</option>
+                      <option>Birthday</option>
+                      <option>Anniversary</option>
+                      <option>Date night</option>
+                      <option>Business</option>
+                      <option>Other</option>
+                    </select>
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="book-group">
+                <legend>Contact details</legend>
+                <div class="field-row">
+                  <label class="field">
+                    <span>Name</span>
+                    <input name="name" type="text" autocomplete="name" maxlength="80" required>
+                  </label>
+                  <label class="field">
+                    <span>Mobile number</span>
+                    <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0917 123 4567" required>
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="book-group" data-for="delivery" hidden disabled>
+                <legend>Delivery address</legend>
+                <label class="field">
+                  <span>House no. &amp; street</span>
+                  <input name="address" type="text" autocomplete="address-line1" maxlength="160" required>
+                </label>
+                <div class="field-row">
+                  <label class="field">
+                    <span>Barangay</span>
+                    <input name="barangay" type="text" autocomplete="address-level3" maxlength="80" required>
+                  </label>
+                  <label class="field">
+                    <span>City / municipality</span>
+                    <input name="city" type="text" autocomplete="address-level2" maxlength="80" value="Sto. Tomas" required>
+                  </label>
+                </div>
+                <label class="field">
+                  <span>Landmark <em>(optional)</em></span>
+                  <input name="landmark" type="text" maxlength="160" placeholder="e.g. beside the blue gate">
+                </label>
+              </fieldset>
+
+              <label class="field">
+                <span>Notes <em>(optional)</em></span>
+                <textarea name="notes" rows="3" maxlength="500" placeholder="Allergies, special requests…"></textarea>
+              </label>
+            </div>
+
+            <aside class="book-summary">
+              <h3 data-summary-title>Pre-order food</h3>
+              <p class="small muted" data-summary-hint>Optional — we’ll have your dishes ready when you arrive.</p>
+              <ul class="summary-lines" data-summary-lines></ul>
+              <p class="summary-empty" data-summary-empty>No dishes yet. <a href="#menu">Browse the menu</a> and tap <strong>Add</strong>.</p>
+              <div class="order-total summary-total"><span>Total</span><strong data-summary-total>₱0</strong></div>
+              <p class="small muted" data-auth-note>You’ll need an account to book. <button class="link-btn link-inline" type="button" data-open-auth>Sign in or create one</button></p>
+              <button class="btn btn-primary btn-block" type="submit" data-book-submit>Reserve table</button>
+              <p class="form-error" role="alert" data-book-error></p>
+            </aside>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="cta">
+      <img class="cta-img" src="images/mission.jpg" width="736" height="981" loading="lazy" alt="">
+      <div class="container cta-inner reveal">
+        <h2>Ready to satisfy your cravings?</h2>
+        <p>Find your next favorite meal on our menu, or send us a message — we’re happy to help.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="button" data-open-order="menu-if-empty">Start your order</button>
+          <a class="btn btn-ghost" href="https://www.facebook.com/profile.php?id=61595608813635" target="_blank" rel="noopener">Message us</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Gallery ============ -->
+    <section class="section gallery" id="gallery">
+      <div class="container">
+        <div class="section-head section-head-split reveal">
+          <div>
+            <p class="eyebrow">Gallery</p>
+            <h2>Explore our culinary visuals</h2>
+          </div>
+          <p class="section-sub">The warm room, the busy kitchen and the plates our guests keep coming back for.</p>
+        </div>
+
+        <div class="bento">
+          <button class="tile tile-a reveal" type="button" data-lightbox>
+            <img src="images/menu-hero.jpg" width="1254" height="1254" loading="lazy" alt="A guest browsing the Cravn’ Go menu at a candlelit table">
+          </button>
+          <button class="tile tile-b reveal" type="button" data-lightbox>
+            <img src="images/recipes.jpg" width="1536" height="1024" loading="lazy" style="object-position: 50% 62%" alt="Our chef plating chicken piccata in the kitchen">
+          </button>
+          <button class="tile tile-c reveal" type="button" data-lightbox>
+            <img src="images/limonata.jpg" width="736" height="736" loading="lazy" alt="Iced limonata with lemon and mint">
+          </button>
+          <button class="tile tile-d reveal" type="button" data-lightbox>
+            <img src="images/tiramisu.jpg" width="736" height="981" loading="lazy" alt="Tiramisu with chocolate curls">
+          </button>
+          <button class="tile tile-e reveal" type="button" data-lightbox>
+            <img src="images/service.jpg" width="1536" height="1024" loading="lazy" style="object-position: 50% 40%" alt="Friends sharing a meal at Cravn’ Go">
+          </button>
+          <button class="tile tile-f reveal" type="button" data-lightbox>
+            <img src="images/quality.jpg" width="1295" height="1214" loading="lazy" style="object-position: 50% 30%" alt="A server bringing carbonara to the table">
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Visit ============ -->
+    <section class="section visit" id="visit">
+      <div class="container">
+        <div class="section-head section-head-split reveal">
+          <div>
+            <p class="eyebrow">Visit us</p>
+            <h2>Find our location</h2>
+          </div>
+          <p class="section-sub">Visit us in person to experience our menu firsthand and enjoy a warm, welcoming atmosphere.</p>
+        </div>
+
+        <div class="visit-grid">
+        <div class="visit-info reveal">
+          <p class="open-status" data-open-status hidden></p>
+          <ul class="contact-list">
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+              <div>
+                <span class="contact-label">Address</span>
+                <a href="https://www.google.com/maps/search/?api=1&amp;query=The+Lifestyle+Strip,+Sto.+Tomas,+Batangas" target="_blank" rel="noopener">The Lifestyle Strip, Sto. Tomas, Batangas</a>
+              </div>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              <div>
+                <span class="contact-label">Hours</span>
+                <!-- data-days: 0 = Sunday … 6 = Saturday. data-open / data-close drive the "Open now" badge. -->
+                <table class="hours" data-hours>
+                  <tr data-days="1 2 3 4" data-open="11:00" data-close="21:00"><th scope="row">Mon – Thu</th><td>11:00 AM – 9:00 PM</td></tr>
+                  <tr data-days="5 6" data-open="11:00" data-close="23:00"><th scope="row">Fri – Sat</th><td>11:00 AM – 11:00 PM</td></tr>
+                  <tr data-days="0" data-open="15:00" data-close="23:00"><th scope="row">Sunday</th><td>3:00 PM – 11:00 PM</td></tr>
+                </table>
+              </div>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg>
+              <div>
+                <span class="contact-label">Phone</span>
+                <a href="tel:+639305591153">0930 559 1153</a>
+              </div>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6 8.5 7 8.5-7"/></svg>
+              <div>
+                <span class="contact-label">Email</span>
+                <a href="mailto:latjhoseah09@gmail.com">latjhoseah09@gmail.com</a>
+              </div>
+            </li>
+          </ul>
+          <div class="visit-actions">
+            <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=The+Lifestyle+Strip,+Sto.+Tomas,+Batangas" target="_blank" rel="noopener">Get directions</a>
+            <a class="btn btn-outline" href="tel:+639305591153">Call us</a>
+          </div>
+        </div>
+
+        <div class="map-card reveal">
+          <iframe title="Map showing Cravn’ Go at The Lifestyle Strip, Sto. Tomas, Batangas"
+                  src="https://www.google.com/maps?q=The+Lifestyle+Strip,+Sto.+Tomas,+Batangas&amp;output=embed"
+                  loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
+
+        <form class="contact-card reveal" action="mailto:latjhoseah09@gmail.com" method="post" enctype="text/plain" data-contact-form>
+          <div class="contact-intro">
+            <h3>Send us a message</h3>
+            <p class="muted">Questions, reservations or big group orders — we’d love to hear from you.</p>
+          </div>
+          <div class="contact-fields">
+          <div class="field-row">
+            <label class="field">
+              <span>Name</span>
+              <input name="name" type="text" autocomplete="name" required>
+            </label>
+            <label class="field">
+              <span>Email</span>
+              <input name="email" type="email" autocomplete="email" required>
+            </label>
+          </div>
+          <label class="field">
+            <span>Message</span>
+            <textarea name="message" rows="5" required></textarea>
+          </label>
+          <div class="form-foot">
+            <button class="btn btn-primary" type="submit">Send message</button>
+            <p class="small muted">Opens your email app with your message ready to send.</p>
+          </div>
+          </div>
+        </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Newsletter ============ -->
+    <section class="join" id="join" aria-labelledby="join-title">
+      <img class="join-img" src="images/community.jpg" width="736" height="1308" loading="lazy" alt="">
+      <div class="container join-inner reveal">
+        <p class="eyebrow eyebrow-light">Newsletter</p>
+        <h2 id="join-title">Join our community</h2>
+        <p class="join-lede">Stay updated with our latest news, new dishes and special offers — straight to your inbox.</p>
+
+        <!-- Saved to the "subscribers" table in Supabase (see supabase/schema.sql) -->
+        <form class="join-form" method="post" data-subscribe-form>
+          <label class="sr-only" for="join-name">Name</label>
+          <input id="join-name" name="name" type="text" placeholder="Your name" autocomplete="name" maxlength="80" required>
+          <label class="sr-only" for="join-email">Email</label>
+          <input id="join-email" name="email" type="email" placeholder="Your email" autocomplete="email" maxlength="254" required>
+          <div class="hp" aria-hidden="true">
+            <label>Leave this empty <input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+          </div>
+          <button class="btn btn-primary" type="submit">Subscribe</button>
+        </form>
+        <p class="join-status" role="status" aria-live="polite" data-subscribe-status></p>
+
+        <p class="join-fine">No spam, just good food news. Prefer social? <a href="https://www.facebook.com/profile.php?id=61595608813635" target="_blank" rel="noopener">Follow us on Facebook</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a class="brand brand-light" href="#top" aria-label="Cravn’ Go, back to top">
+          <span class="brand-name">Cravn’ Go</span>
+          <span class="brand-flag" aria-hidden="true"></span>
+          <span class="brand-sub">Italian Restaurant</span>
+        </a>
+        <p>A taste of Italy, a touch of love.</p>
+      </div>
+      <address class="footer-contact">
+        The Lifestyle Strip, Sto. Tomas, Batangas<br>
+        <a href="tel:+639305591153">0930 559 1153</a><br>
+        <a href="mailto:latjhoseah09@gmail.com">latjhoseah09@gmail.com</a>
+      </address>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#about">About</a>
+        <a href="#menu">Menu</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#visit">Visit</a>
+        <a href="https://www.facebook.com/profile.php?id=61595608813635" target="_blank" rel="noopener">Facebook</a>
+      </nav>
+    </div>
+    <div class="container footer-base">
+      <p>© <span data-year>2026</span> Cravn’ Go. All rights reserved.</p>
+      <p class="script">Buon appetito!</p>
+    </div>
+  </footer>
+
+  <!-- ============ Order drawer ============ -->
+  <dialog class="drawer" id="order" aria-labelledby="order-title" data-drawer>
+    <div class="drawer-inner">
+      <header class="drawer-head">
+        <h2 id="order-title">Your order</h2>
+        <button class="icon-btn" type="button" data-close aria-label="Close order">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="drawer-empty" data-order-empty>
+        <p>Your order is empty.</p>
+        <p class="muted">Pick something delicious from the menu to get started.</p>
+        <a class="btn btn-primary" href="#menu" data-close>Browse the menu</a>
+      </div>
+
+      <ul class="order-lines" data-order-lines></ul>
+
+      <footer class="drawer-foot" data-order-foot hidden>
+        <div class="order-total"><span>Total</span><strong data-order-total>₱0</strong></div>
+        <button class="btn btn-primary btn-block" type="button" data-checkout>Checkout</button>
+        <p class="muted small">Next, choose pick-up, delivery or a table reservation. Prefer to call? <a href="tel:+639305591153">0930 559 1153</a></p>
+        <div class="drawer-links">
+          <button class="link-btn" type="button" data-send-order>Send via Messenger instead</button>
+          <button class="link-btn" type="button" data-clear-order>Clear order</button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- ============ Lightbox ============ -->
+  <dialog class="lightbox" aria-label="Photo viewer" data-lightbox-dialog>
+    <figure>
+      <img alt="" data-lightbox-img>
+      <figcaption data-lightbox-cap></figcaption>
+    </figure>
+    <button class="icon-btn lb-close" type="button" data-close aria-label="Close photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <button class="icon-btn lb-prev" type="button" data-lb-prev aria-label="Previous photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+    </button>
+    <button class="icon-btn lb-next" type="button" data-lb-next aria-label="Next photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+    </button>
+  </dialog>
+
+  <!-- ============ Sign in / create account ============ -->
+  <dialog class="modal" aria-labelledby="auth-title" data-auth-dialog>
+    <div class="modal-inner">
+      <header class="modal-head">
+        <h2 id="auth-title" data-auth-title>Welcome back</h2>
+        <button class="icon-btn" type="button" data-close aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+      <p class="modal-note" data-auth-reason hidden></p>
+      <div class="segmented" role="group" aria-label="Account">
+        <button type="button" aria-pressed="true" data-auth-mode="login">Sign in</button>
+        <button type="button" aria-pressed="false" data-auth-mode="register">Create account</button>
+      </div>
+
+      <form class="auth-form" data-auth-form="login">
+        <label class="field">
+          <span>Email</span>
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <p class="form-error" role="alert" data-form-error></p>
+        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+
+      <form class="auth-form" data-auth-form="register" hidden>
+        <label class="field">
+          <span>Full name</span>
+          <input name="name" type="text" autocomplete="name" maxlength="80" required>
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label class="field">
+          <span>Mobile number</span>
+          <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0917 123 4567" required>
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input name="password" type="password" autocomplete="new-password" minlength="8" required>
+          <small class="field-hint">At least 8 characters.</small>
+        </label>
+        <p class="form-error" role="alert" data-form-error></p>
+        <button class="btn btn-primary btn-block" type="submit">Create account</button>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ============ My account ============ -->
+  <dialog class="modal modal-wide" aria-labelledby="account-title" data-account-dialog>
+    <div class="modal-inner">
+      <header class="modal-head">
+        <div>
+          <p class="eyebrow">My account</p>
+          <h2 id="account-title" data-account-name>Hi!</h2>
+          <p class="small muted" data-account-contact></p>
+        </div>
+        <button class="icon-btn" type="button" data-close aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+      <div class="account-bar">
+        <h3>My bookings</h3>
+        <a class="link-btn link-inline" href="#book" data-close>New booking</a>
+      </div>
+      <p class="muted" data-bookings-status></p>
+      <ul class="booking-list" data-booking-list></ul>
+      <footer class="modal-foot">
+        <button class="btn btn-outline" type="button" data-sign-out>Sign out</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- ============ Booking confirmation ============ -->
+  <dialog class="modal" aria-labelledby="confirm-title" data-confirm-dialog>
+    <div class="modal-inner modal-center">
+      <span class="confirm-check" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+      </span>
+      <h2 id="confirm-title">Booking received!</h2>
+      <p data-confirm-text></p>
+      <p class="confirm-ref">Your reference <strong data-confirm-ref></strong></p>
+      <p class="small muted">We’ll confirm it with you shortly. You can check or cancel it anytime in My account.</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" data-open-account>My bookings</button>
+        <button class="btn btn-primary" type="button" data-close>Done</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>

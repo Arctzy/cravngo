@@ -380,7 +380,7 @@
 
   /* ---------- Buttons: an ink ripple from where you press ---------- */
   document.addEventListener("pointerdown", (e) => {
-    const btn = e.target.closest(".btn, .add-btn, .menu-filters button, .map-switch button, .map-chip");
+    const btn = e.target.closest(".btn, .add-btn, .menu-filters button, .map-switch button, .map-chip, .date-chip");
     if (!btn || btn.disabled || reduceMotion.matches || !btn.animate) return;
     const r = btn.getBoundingClientRect();
     const size = Math.max(r.width, r.height) * 2.2;
@@ -412,6 +412,44 @@
     dlg.addEventListener("click", (e) => {
       if (e.target === dlg) closeDialog(dlg);
     });
+  });
+
+  /* ---------- Page transitions: a curtain sweeps up on the way out and lifts off the next page ---------- */
+  // The head script on every page adds .page-entering when this flag is set, so the curtain shows from the first paint
+  const NAV_KEY = "cravngo-nav";
+  try {
+    sessionStorage.removeItem(NAV_KEY);
+  } catch {
+    /* no storage — pages simply load without the curtain */
+  }
+  setTimeout(() => document.documentElement.classList.remove("page-entering"), 1000);
+
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("a[href]");
+    if (!link || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if ((link.target && link.target !== "_self") || link.hasAttribute("download") || reduceMotion.matches) return;
+    const url = new URL(link.href, location.href);
+    if (url.protocol !== location.protocol || url.host !== location.host) return; // tel:, mailto:, other sites
+    if (url.pathname === location.pathname && url.search === location.search && url.hash) return; // same-page anchor
+
+    e.preventDefault();
+    try {
+      sessionStorage.setItem(NAV_KEY, "1");
+    } catch {
+      /* no storage */
+    }
+    $$("dialog[open]").forEach(closeDialog);
+    const curtain = document.createElement("div");
+    curtain.className = "page-curtain";
+    curtain.setAttribute("aria-hidden", "true");
+    curtain.innerHTML = '<span class="page-curtain-mark">Cravn’ Go</span>';
+    document.body.appendChild(curtain);
+    setTimeout(() => (location.href = url.href), 520);
+  });
+
+  // Coming back with the browser's Back button can restore the page with the curtain still down
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) $$(".page-curtain").forEach((c) => c.remove());
   });
 
   /* ---------- Little celebrations ---------- */

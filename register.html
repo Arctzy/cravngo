@@ -13,7 +13,7 @@
   <meta property="og:description" content="Create your Cravn’ Go account to reserve tables and order ahead for pick-up or delivery.">
   <meta property="og:image" content="images/hero.jpg">
 
-  <script>document.documentElement.classList.add("js");try{if(localStorage.getItem("cravngo-session"))document.documentElement.classList.add("signed-in")}catch(e){}</script>
+  <script>document.documentElement.classList.add("js");try{if(sessionStorage.getItem("cravngo-nav"))document.documentElement.classList.add("page-entering")}catch(e){}try{if(localStorage.getItem("cravngo-session"))document.documentElement.classList.add("signed-in")}catch(e){}</script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

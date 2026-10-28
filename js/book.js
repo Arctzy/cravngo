@@ -90,6 +90,8 @@
     $("[data-summary-hint]", form).textContent = copy.hint;
     errorEl.textContent = "";
     renderWho();
+    syncChips();
+    updateMeta();
   };
 
   const addDays = (iso, n) => {
@@ -136,6 +138,70 @@
     }
   };
 
+  const shortDate = (iso) =>
+    parseDate(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+
+  /* ---------- Quick dates: Today / Tomorrow / the coming Saturday ---------- */
+  const chipsEl = $("[data-date-chips]");
+  const syncChips = () =>
+    $$("button", chipsEl).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.date === dateInput.value)));
+
+  const buildChips = () => {
+    const today = manilaNow();
+    let toSaturday = (6 - today.day + 7) % 7;
+    if (toSaturday < 2) toSaturday += 7; // today or tomorrow already has its own chip
+    const saturday = addDays(today.date, toSaturday);
+    chipsEl.innerHTML = "";
+    [["Today", today.date], ["Tomorrow", addDays(today.date, 1)], [shortDate(saturday), saturday]].forEach(([text, date]) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "date-chip";
+      chip.textContent = text;
+      chip.dataset.date = date;
+      chip.addEventListener("click", () => {
+        dateInput.value = date;
+        dateInput.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+      chipsEl.appendChild(chip);
+    });
+  };
+
+  /* ---------- Summary: what, when and for how many ---------- */
+  const metaEl = $("[data-summary-meta]");
+  const META_ICONS = {
+    type: '<path d="M4 7h16M4 12h16M4 17h10"/>',
+    date: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+    time: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    guests: '<circle cx="9" cy="8" r="3.2"/><path d="M3 19a6 6 0 0 1 12 0M16 5.5a3 3 0 0 1 0 5.6M18 19a6 6 0 0 0-3-5.2"/>',
+    occasion: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/>',
+  };
+  const TYPE_NAMES = { reserve: "Table reservation", pickup: "Pick-up order", delivery: "Delivery order" };
+  let lastMeta = {};
+
+  const updateMeta = () => {
+    const rows = { type: TYPE_NAMES[bookType()] };
+    rows.date = dateInput.value ? shortDate(dateInput.value) : "Pick a date";
+    rows.time = timeSelect.value ? toLabel(timeSelect.value) : "Choose a time";
+    if (bookType() === "reserve") {
+      rows.guests = form.elements.guests.selectedOptions[0]?.text || "";
+      if (form.elements.occasion.value) rows.occasion = form.elements.occasion.value;
+    }
+    if (JSON.stringify(rows) === JSON.stringify(lastMeta)) return;
+    metaEl.innerHTML = "";
+    Object.entries(rows).forEach(([key, text]) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${META_ICONS[key]}</svg><span></span>`;
+      $("span", li).textContent = text;
+      // The line that just changed flashes so you can see the form and the summary are linked
+      if (lastMeta.type && lastMeta[key] !== text) li.classList.add("is-changed");
+      metaEl.appendChild(li);
+    });
+    lastMeta = rows;
+  };
+
+  dateInput.addEventListener("change", syncChips);
+  form.addEventListener("change", updateMeta);
+
   for (let n = 1; n <= 20; n++) {
     form.elements.guests.add(new Option(n === 1 ? "1 guest" : `${n} guests`, n, n === 2, n === 2));
   }
@@ -144,6 +210,7 @@
   const requested = new URLSearchParams(location.search).get("type");
   if (TYPE_COPY[requested]) form.elements.type.value = requested;
 
+  buildChips();
   resetDate();
   applyType();
   auth.onChange(renderWho);
@@ -169,7 +236,13 @@
     summaryLines.innerHTML = "";
     order.items().forEach(({ id, qty }) => summaryLines.appendChild(order.line(id, qty)));
     summaryEmpty.hidden = order.count() > 0;
-    summaryTotal.textContent = peso(order.total());
+    const total = peso(order.total());
+    if (summaryTotal.textContent !== total) {
+      summaryTotal.textContent = total;
+      summaryTotal.classList.remove("bump");
+      void summaryTotal.offsetWidth;
+      summaryTotal.classList.add("bump");
+    }
   });
 
   /* ---------- Submit ---------- */

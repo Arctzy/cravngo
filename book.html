@@ -13,7 +13,7 @@
   <meta property="og:description" content="Reserve a table, order ahead for pick-up, or get Cravn’ Go delivered.">
   <meta property="og:image" content="images/hero.jpg">
 
-  <script>document.documentElement.classList.add("js");try{if(localStorage.getItem("cravngo-session"))document.documentElement.classList.add("signed-in")}catch(e){}</script>
+  <script>document.documentElement.classList.add("js");try{if(sessionStorage.getItem("cravngo-nav"))document.documentElement.classList.add("page-entering")}catch(e){}try{if(localStorage.getItem("cravngo-session"))document.documentElement.classList.add("signed-in")}catch(e){}</script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -122,6 +122,8 @@
                     <select name="time" required data-book-time></select>
                   </label>
                 </div>
+                <!-- Today / Tomorrow / Saturday shortcuts (js/book.js) -->
+                <div class="date-chips" role="group" aria-label="Quick dates" data-date-chips></div>
               </fieldset>
 
               <fieldset class="book-group" data-for="reserve">
@@ -176,6 +178,8 @@
             <aside class="book-summary">
               <h3 data-summary-title>Pre-order food</h3>
               <p class="small muted" data-summary-hint>Optional — we’ll have your dishes ready when you arrive.</p>
+              <!-- What, when and how many — kept up to date as the form changes (js/book.js) -->
+              <ul class="summary-meta" data-summary-meta></ul>
               <ul class="summary-lines" data-summary-lines></ul>
               <p class="summary-empty" data-summary-empty>No dishes yet. <a href="menu.html">Browse the menu</a> and tap <strong>Add</strong>.</p>
               <div class="order-total summary-total"><span>Total</span><strong data-summary-total>₱0</strong></div>

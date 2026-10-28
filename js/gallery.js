@@ -22,6 +22,23 @@
   count.className = "lb-count";
   lbCap.before(count);
 
+  // A strip of thumbnails along the bottom of the viewer (larger screens)
+  const thumbs = document.createElement("div");
+  thumbs.className = "lb-thumbs";
+  tiles.forEach((tile, i) => {
+    const thumb = document.createElement("button");
+    thumb.type = "button";
+    thumb.setAttribute("aria-label", `Show photo ${i + 1}`);
+    const img = document.createElement("img");
+    img.src = $("img", tile).getAttribute("src");
+    img.alt = "";
+    thumb.appendChild(img);
+    thumb.addEventListener("click", () => show(i, Math.sign(i - index)));
+    thumbs.appendChild(thumb);
+  });
+  lb.appendChild(thumbs);
+  lb.classList.add("has-thumbs");
+
   // dir: -1 previous, 1 next, 0 opening — the photo slides in from that side
   const show = (i, dir = 0) => {
     index = (i + tiles.length) % tiles.length;
@@ -30,6 +47,7 @@
     lbImg.alt = img.alt;
     lbCap.textContent = img.alt;
     count.textContent = `${index + 1} / ${tiles.length}`;
+    [...thumbs.children].forEach((t, n) => t.setAttribute("aria-current", String(n === index)));
     if (reduceMotion.matches || !lbImg.animate) return;
     lbImg.animate(
       [

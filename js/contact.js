@@ -33,6 +33,23 @@
   statusEl.classList.add(open ? "is-open" : "is-closed");
   statusEl.hidden = false;
 
+  // Today's opening hours as a bar, filled up to the current time (Philippine time)
+  if (today) {
+    const start = toMinutes(today.open);
+    const end = toMinutes(today.close);
+    const done = Math.min(Math.max((now - start) / (end - start), 0), 1);
+    const bar = document.createElement("div");
+    bar.className = `today-bar${open ? " is-open" : ""}`;
+    bar.style.setProperty("--done", done.toFixed(3));
+    bar.innerHTML = `
+      <div class="today-track"><span class="today-fill"></span><span class="today-now"></span></div>
+      <div class="today-labels"><span></span><span></span></div>`;
+    const [openLabel, closeLabel] = bar.querySelectorAll(".today-labels span");
+    openLabel.textContent = `Opens ${toLabel(today.open)}`;
+    closeLabel.textContent = `Closes ${toLabel(today.close)}`;
+    statusEl.after(bar);
+  }
+
   /* ---------- Map: Map / Satellite switch, loading shimmer, copy address ---------- */
   const mapCard = $("[data-map]");
   const frame = $("[data-map-frame]");
@@ -72,8 +89,24 @@
 
   /* ---------- Message form → visitor's email app ---------- */
   const contactForm = $("[data-contact-form]");
+  const message = $("[data-message]");
+  const counter = $("[data-message-count]");
+  const sendBtn = $("[data-send]");
+
+  const updateCount = () => {
+    counter.textContent = `${message.value.length} / ${message.maxLength}`;
+    counter.classList.toggle("is-near", message.value.length > message.maxLength * 0.9);
+  };
+  message.addEventListener("input", updateCount);
+  updateCount();
+
   contactForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    // The paper plane takes off, then glides back in
+    sendBtn.classList.remove("is-sent");
+    void sendBtn.offsetWidth;
+    sendBtn.classList.add("is-sent");
+    setTimeout(() => sendBtn.classList.remove("is-sent"), 1400);
     const data = new FormData(contactForm);
     const name = data.get("name").trim();
     const subject = `Website message from ${name}`;

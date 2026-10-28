@@ -13,7 +13,7 @@
   <meta property="og:description" content="Photos of Cravn’ Go — the warm dining room, the busy kitchen and the dishes our guests love.">
   <meta property="og:image" content="images/hero.jpg">
 
-  <script>document.documentElement.classList.add("js");try{if(localStorage.getItem("cravngo-session"))document.documentElement.classList.add("signed-in")}catch(e){}</script>
+  <script>document.documentElement.classList.add("js");try{if(sessionStorage.getItem("cravngo-nav"))document.documentElement.classList.add("page-entering")}catch(e){}try{if(localStorage.getItem("cravngo-session"))document.documentElement.classList.add("signed-in")}catch(e){}</script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -95,6 +95,51 @@
           <button class="tile tile-f reveal" type="button" data-lightbox>
             <img src="images/quality.jpg" width="1295" height="1214" loading="lazy" style="object-position: 50% 30%" alt="A server bringing carbonara to the table">
           </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Dish reel ============ -->
+    <section class="section reel-section">
+      <div class="container">
+        <div class="section-head section-head-center reveal">
+          <p class="eyebrow">Straight from the kitchen</p>
+          <h2>Every plate, picture-ready</h2>
+          <p class="section-sub">A rolling look at the dishes our guests order again and again.</p>
+        </div>
+      </div>
+      <!-- Decorative: the same six dishes twice, for a seamless loop -->
+      <div class="reel" aria-hidden="true">
+        <div class="reel-track">
+          <figure class="reel-item"><img src="images/carbonara.jpg" width="736" height="1315" loading="lazy" alt="" style="object-position: 50% 72%"><figcaption>Carbonara</figcaption></figure>
+          <figure class="reel-item"><img src="images/lasagna.jpg" width="736" height="736" loading="lazy" alt=""><figcaption>Lasagna</figcaption></figure>
+          <figure class="reel-item"><img src="images/chicken-alfredo.jpg" width="736" height="1104" loading="lazy" alt=""><figcaption>Chicken Alfredo</figcaption></figure>
+          <figure class="reel-item"><img src="images/chicken-piccata.jpg" width="600" height="804" loading="lazy" alt=""><figcaption>Chicken Piccata</figcaption></figure>
+          <figure class="reel-item"><img src="images/tiramisu.jpg" width="736" height="981" loading="lazy" alt=""><figcaption>Tiramisu</figcaption></figure>
+          <figure class="reel-item"><img src="images/limonata.jpg" width="736" height="736" loading="lazy" alt=""><figcaption>Limonata</figcaption></figure>
+          <figure class="reel-item"><img src="images/carbonara.jpg" width="736" height="1315" loading="lazy" alt="" style="object-position: 50% 72%"><figcaption>Carbonara</figcaption></figure>
+          <figure class="reel-item"><img src="images/lasagna.jpg" width="736" height="736" loading="lazy" alt=""><figcaption>Lasagna</figcaption></figure>
+          <figure class="reel-item"><img src="images/chicken-alfredo.jpg" width="736" height="1104" loading="lazy" alt=""><figcaption>Chicken Alfredo</figcaption></figure>
+          <figure class="reel-item"><img src="images/chicken-piccata.jpg" width="600" height="804" loading="lazy" alt=""><figcaption>Chicken Piccata</figcaption></figure>
+          <figure class="reel-item"><img src="images/tiramisu.jpg" width="736" height="981" loading="lazy" alt=""><figcaption>Tiramisu</figcaption></figure>
+          <figure class="reel-item"><img src="images/limonata.jpg" width="736" height="736" loading="lazy" alt=""><figcaption>Limonata</figcaption></figure>
+        </div>
+      </div>
+      <div class="container section-foot">
+        <a class="btn btn-primary" href="menu.html">See the menu</a>
+        <a class="btn btn-outline" href="https://www.facebook.com/profile.php?id=61595608813635" target="_blank" rel="noopener">More photos on Facebook</a>
+      </div>
+    </section>
+
+    <!-- ============ Call to action ============ -->
+    <section class="cta">
+      <img class="cta-img" src="images/menu-hero.jpg" width="1254" height="1254" loading="lazy" alt="">
+      <div class="container cta-inner reveal">
+        <h2>Looks good? It tastes even better.</h2>
+        <p>Save a table and see it all in person, or order ahead for pick-up or delivery.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="book.html?type=reserve">Book a table</a>
+          <a class="btn btn-ghost" href="book.html?type=pickup">Order ahead</a>
         </div>
       </div>
     </section>

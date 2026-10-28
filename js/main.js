@@ -71,14 +71,62 @@
   /* ---------- Footer year ---------- */
   $$("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
 
-  /* ---------- Header: solid on scroll + mobile nav ---------- */
+  /* ---------- Header: solid on scroll, tucks away while reading down + mobile nav ---------- */
   const header = $("[data-header]");
   const nav = $("#site-nav");
   const navToggle = $("[data-nav-toggle]");
 
-  const updateHeader = () => header.classList.toggle("is-solid", window.scrollY > 24);
+  // A thin Italian-flag bar showing how far down the page you are
+  const progressBar = document.createElement("div");
+  progressBar.className = "scroll-progress";
+  progressBar.setAttribute("aria-hidden", "true");
+  document.body.appendChild(progressBar);
+
+  // "Back to top" button; its ring fills as you scroll
+  const toTop = document.createElement("button");
+  toTop.type = "button";
+  toTop.className = "to-top";
+  toTop.setAttribute("aria-label", "Back to top");
+  toTop.innerHTML =
+    '<svg viewBox="0 0 48 48" aria-hidden="true"><circle class="to-top-track" cx="24" cy="24" r="21"/><circle class="to-top-ring" cx="24" cy="24" r="21" pathLength="1"/><path d="m17 27 7-7 7 7"/></svg>';
+  toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reduceMotion.matches ? "auto" : "smooth" }));
+  document.body.appendChild(toTop);
+
+  let lastY = window.scrollY;
+  let tucked = false;
+  let ticking = false;
+  const updateHeader = () => {
+    const y = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = max > 0 ? Math.min(y / max, 1) : 0;
+    header.classList.toggle("is-solid", y > 24);
+
+    // Keep the header in view near the top, while a menu is open or it has keyboard focus
+    const busy = header.querySelector('[aria-expanded="true"]') || header.matches(":focus-within");
+    if (busy || y < 240) {
+      tucked = false;
+      lastY = y;
+    } else if (Math.abs(y - lastY) > 8) {
+      tucked = y > lastY;
+      lastY = y;
+    }
+    header.classList.toggle("is-tucked", tucked);
+
+    progressBar.style.transform = `scaleX(${progress})`;
+    toTop.style.setProperty("--progress", progress.toFixed(4));
+    toTop.classList.toggle("is-visible", y > window.innerHeight * 0.8);
+    ticking = false;
+  };
   updateHeader();
-  window.addEventListener("scroll", updateHeader, { passive: true });
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(updateHeader);
+    },
+    { passive: true }
+  );
 
   const setNav = (open) => {
     nav.classList.toggle("is-open", open);
@@ -265,7 +313,10 @@
               el.classList.add("in");
               io.unobserve(el);
               // Drop the stagger once revealed so hover effects respond instantly
-              setTimeout(() => el.style.removeProperty("--reveal-delay"), 2200);
+              setTimeout(() => {
+                el.style.removeProperty("--reveal-delay");
+                el.classList.add("is-settled");
+              }, 2200);
             });
           },
           { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
@@ -278,10 +329,73 @@
       const siblings = $$(":scope > .reveal", el.parentElement);
       if (siblings.length > 1) el.style.setProperty("--reveal-delay", `${(siblings.indexOf(el) % 3) * 90}ms`);
       if (io) io.observe(el);
-      else el.classList.add("in");
+      else el.classList.add("in", "is-settled");
     });
   };
+
+  // Section headings rise in word by word as their block is revealed
+  $$(".reveal h2").forEach((heading) => {
+    const label = heading.textContent.replace(/\s+/g, " ").trim();
+    const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    let n = 0;
+    textNodes.forEach((node) => {
+      const frag = document.createDocumentFragment();
+      node.textContent.split(/(\s+)/).forEach((part) => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) return frag.append(part);
+        const word = document.createElement("span");
+        word.className = "word";
+        word.setAttribute("aria-hidden", "true");
+        word.style.setProperty("--w", n++);
+        word.textContent = part;
+        frag.append(word);
+      });
+      node.replaceWith(frag);
+    });
+    heading.setAttribute("aria-label", label);
+  });
+
   observe($$(".reveal"));
+
+  /* ---------- Cards lean toward the pointer, with a soft light following it ---------- */
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  document.addEventListener(
+    "pointermove",
+    (e) => {
+      if (!finePointer.matches || reduceMotion.matches) return;
+      const card = e.target.closest(".dish, .tile, .why-list li");
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+      card.style.setProperty("--mx", `${(x * 100).toFixed(1)}%`);
+      card.style.setProperty("--my", `${(y * 100).toFixed(1)}%`);
+      card.style.setProperty("--rx", `${((0.5 - y) * 6).toFixed(2)}deg`);
+      card.style.setProperty("--ry", `${((x - 0.5) * 8).toFixed(2)}deg`);
+    },
+    { passive: true }
+  );
+
+  /* ---------- Buttons: an ink ripple from where you press ---------- */
+  document.addEventListener("pointerdown", (e) => {
+    const btn = e.target.closest(".btn, .add-btn, .menu-filters button, .map-switch button, .map-chip");
+    if (!btn || btn.disabled || reduceMotion.matches || !btn.animate) return;
+    const r = btn.getBoundingClientRect();
+    const size = Math.max(r.width, r.height) * 2.2;
+    const ink = document.createElement("span");
+    ink.className = "ripple";
+    ink.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+    btn.appendChild(ink);
+    ink
+      .animate([{ transform: "scale(0)", opacity: 0.35 }, { transform: "scale(1)", opacity: 0 }], {
+        duration: 650,
+        easing: "cubic-bezier(0.2, 0.7, 0.2, 1)",
+      })
+      .finished.catch(() => {})
+      .finally(() => ink.remove());
+  });
 
   /* ---------- Dialogs ---------- */
   const openDialog = (dlg) => {
@@ -585,7 +699,7 @@
   /* ---------- Shared with page scripts ---------- */
   window.CG = {
     $, $$, peso, firstName, initials, isPhMobile, safeNext, reduceMotion,
-    db, dbError, NOT_READY, withBusy,
+    db, dbError, NOT_READY, withBusy, copyText,
     showToast, flash, openDialog, closeDialog, observe, setNav, celebrate,
     toMinutes, toLabel, hoursFor, manilaNow, parseDate, whenText,
     auth: {

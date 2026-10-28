@@ -115,10 +115,42 @@
           </div>
         </div>
 
-        <div class="map-card reveal">
-          <iframe title="Map showing Cravn’ Go at The Lifestyle Strip, Sto. Tomas, Batangas"
-                  src="https://www.google.com/maps?q=The+Lifestyle+Strip,+Sto.+Tomas,+Batangas&amp;output=embed"
-                  loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <!-- Map with a Map / Satellite switch (js/contact.js) -->
+        <div class="map-card reveal is-loading" data-map data-view="m">
+          <div class="map-frame">
+            <iframe title="Map showing Cravn’ Go at The Lifestyle Strip, Sto. Tomas, Batangas"
+                    src="https://www.google.com/maps?q=The+Lifestyle+Strip,+Sto.+Tomas,+Batangas&amp;output=embed"
+                    loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen data-map-frame></iframe>
+            <div class="map-loading" aria-hidden="true">
+              <svg class="map-loading-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+              <span class="map-loading-shadow"></span>
+              <span>Finding us on the map…</span>
+            </div>
+            <div class="map-switch" role="group" aria-label="Map style">
+              <button type="button" aria-pressed="true" data-map-view="m">Map</button>
+              <button type="button" aria-pressed="false" data-map-view="k">Satellite</button>
+            </div>
+          </div>
+          <div class="map-place">
+            <span class="map-place-pin" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+            </span>
+            <div class="map-place-text">
+              <strong>Cravn’ Go</strong>
+              <span>The Lifestyle Strip, Sto. Tomas, Batangas</span>
+              <span class="map-place-status" data-map-status hidden></span>
+            </div>
+            <div class="map-place-actions">
+              <a class="map-chip" href="https://www.google.com/maps/search/?api=1&amp;query=The+Lifestyle+Strip,+Sto.+Tomas,+Batangas" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+                Open in Maps
+              </a>
+              <button class="map-chip" type="button" data-copy-address>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>
+                Copy address
+              </button>
+            </div>
+          </div>
         </div>
 
         <form class="contact-card reveal" action="mailto:latjhoseah09@gmail.com" method="post" enctype="text/plain" data-contact-form>

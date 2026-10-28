@@ -1,6 +1,6 @@
-/* Cravn' Go — Contact page: opening hours, "open now" badge and the message form */
+/* Cravn' Go — Contact page: opening hours, "open now" badge, the map and the message form */
 (() => {
-  const { $, showToast, hoursFor, toMinutes, toLabel, manilaNow } = window.CG;
+  const { $, $$, showToast, copyText, hoursFor, toMinutes, toLabel, manilaNow } = window.CG;
   const DATA = window.CRAVNGO_DATA;
   const CONTACT_EMAIL = "latjhoseah09@gmail.com";
 
@@ -32,6 +32,43 @@
   statusEl.textContent = text;
   statusEl.classList.add(open ? "is-open" : "is-closed");
   statusEl.hidden = false;
+
+  /* ---------- Map: Map / Satellite switch, loading shimmer, copy address ---------- */
+  const mapCard = $("[data-map]");
+  const frame = $("[data-map-frame]");
+  const mapStatus = $("[data-map-status]");
+  const ADDRESS = "Cravn’ Go, The Lifestyle Strip, Sto. Tomas, Batangas";
+  const MAP_SRC = "https://www.google.com/maps?q=The+Lifestyle+Strip,+Sto.+Tomas,+Batangas&output=embed";
+
+  mapStatus.textContent = text;
+  mapStatus.classList.add(open ? "is-open" : "is-closed");
+  mapStatus.hidden = false;
+
+  let loadTimer;
+  const setLoading = (on) => {
+    mapCard.classList.toggle("is-loading", on);
+    clearTimeout(loadTimer);
+    // Never leave the shimmer up if the map is slow to report in
+    if (on) loadTimer = setTimeout(() => setLoading(false), 12000);
+  };
+  frame.addEventListener("load", () => setLoading(false));
+  setLoading(true);
+
+  const views = $$("[data-map-view]", mapCard);
+  views.forEach((btn) =>
+    btn.addEventListener("click", () => {
+      if (btn.getAttribute("aria-pressed") === "true") return;
+      views.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      mapCard.dataset.view = btn.dataset.mapView;
+      setLoading(true);
+      frame.src = MAP_SRC + (btn.dataset.mapView === "k" ? "&t=k" : "");
+    })
+  );
+
+  $("[data-copy-address]", mapCard).addEventListener("click", async () => {
+    const copied = await copyText(ADDRESS);
+    showToast(copied ? "Address copied — paste it in your maps app" : "Couldn’t copy — the address is The Lifestyle Strip, Sto. Tomas");
+  });
 
   /* ---------- Message form → visitor's email app ---------- */
   const contactForm = $("[data-contact-form]");

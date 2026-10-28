@@ -41,9 +41,32 @@
 
   // Category filter on the Menu page; the dishes that stay pop back in one by one
   const filters = $$("[data-filter]");
+
+  // A pill slides behind the chosen filter
+  const filterBar = $(".menu-filters");
+  let movePill = () => {};
+  if (filterBar && "ResizeObserver" in window) {
+    const pill = document.createElement("span");
+    pill.className = "filter-pill";
+    pill.setAttribute("aria-hidden", "true");
+    filterBar.prepend(pill);
+    filterBar.classList.add("has-pill");
+    movePill = () => {
+      const on = $('[aria-pressed="true"]', filterBar);
+      pill.style.width = `${on.offsetWidth}px`;
+      pill.style.height = `${on.offsetHeight}px`;
+      pill.style.transform = `translate(${on.offsetLeft}px, ${on.offsetTop}px)`;
+    };
+    const ro = new ResizeObserver(movePill);
+    [filterBar, ...filters].forEach((el) => ro.observe(el));
+    // Slide only after the first placement, so it doesn't fly in from the corner
+    requestAnimationFrame(() => requestAnimationFrame(() => filterBar.classList.add("pill-ready")));
+  }
+
   filters.forEach((btn) =>
     btn.addEventListener("click", () => {
       filters.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      movePill();
       const shown = $$("[data-dishes] .dish").filter((el) => {
         el.hidden = btn.dataset.filter !== "all" && el.dataset.category !== btn.dataset.filter;
         return !el.hidden;
